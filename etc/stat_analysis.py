@@ -1,8 +1,9 @@
 import json
 import operator
 
+
 def main():
-    f = open('./stats.json', 'r')
+    f = open('../stats.json', 'r')
     json_data = f.read()
 
     D = json.loads(json_data)
@@ -21,7 +22,8 @@ def main():
 
         R[league['League Name']] = max(PS.iteritems(), key=operator.itemgetter(1))[0]
 
-    print R
+    print json.dumps(R)
+
 
 if __name__ == '__main__':
     main()
