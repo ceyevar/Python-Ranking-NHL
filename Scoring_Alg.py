@@ -3,7 +3,7 @@ import re
 from stat_collection import import_data
 from collections import OrderedDict
 import helpers
-
+from itertools import islice
 def main():
     import_data()
     player_dict = {}
@@ -38,8 +38,14 @@ def main():
                     player_dict[player['Name']] = stat_dict['ES Primary Points/GP'] + 0.5 * stat_dict['ES GF%Rel'] + 0.25 * stat_dict['ES GA']
     od = OrderedDict(sorted(player_dict.items(), key=lambda t: t[1]))
     player_dict_ordered = OrderedDict(reversed(list(od.items())))
-    print player_dict_ordered
 
+    print "Our personal ranking of the 2016 NHL Entry Draft:"
+
+    top_10 = list(islice(player_dict_ordered.iteritems(), 0,9))
+    count = 0
+    for player in top_10:
+        count = count+1
+        print str(count) + ". " + str(player[0]) + " (Score: " + str(player[1]) + ")"
 def normalize(stat, database):
     min = 0
     max = 0
