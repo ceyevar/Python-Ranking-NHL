@@ -2,7 +2,7 @@ import json
 import re
 from stat_collection import import_data
 from collections import OrderedDict
-import helpers
+from helpers import find_avg_of_stat
 from itertools import islice
 def main():
     import_data()
@@ -34,7 +34,9 @@ def main():
                     player_dict[player['Name']] = 0
                     stat_dict = {}
                     for stat in stats:
-                            stat_dict[stat] = (float(player[stat])-float(stats_n[stat][0]))/(float(stats_n[stat][1])-float(stats_n[stat][0]))
+                            val = (float(player[stat])-float(stats_n[stat][0]))/(float(stats_n[stat][1])-float(stats_n[stat][0]))
+                            val = val/ find_avg_of_stat(index['League Name'], stat)
+                            stat_dict[stat] = val
                     player_dict[player['Name']] = stat_dict['ES Primary Points/GP'] + 0.5 * stat_dict['ES GF%Rel'] + 0.25 * stat_dict['ES GA']
     od = OrderedDict(sorted(player_dict.items(), key=lambda t: t[1]))
     player_dict_ordered = OrderedDict(reversed(list(od.items())))
