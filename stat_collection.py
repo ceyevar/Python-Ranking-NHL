@@ -3,7 +3,7 @@ import os
 import json
 import re
 
-def main():
+def import_data():
 
     # Gets files from teams directory
     team_files = os.listdir('./data/teams/')
@@ -73,6 +73,3 @@ def main():
     # Dump json into file
     output = open('./stats.json', 'w')
     output.write(json_data)
-
-if __name__ == '__main__':
-    main()
