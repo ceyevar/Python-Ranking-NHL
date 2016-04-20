@@ -1,0 +1,79 @@
+
+{% load staticfiles %}
+<head>
+  <style>
+    #wrap {
+       width:620px;
+       margin:0 auto;
+    }
+    #left_col {
+       float:left;
+       width:280px;
+    }
+    #right_col {
+       float:right;
+       width:280px;
+    }
+    .ui-dialog-titlebar {
+      font-size: 80%;
+    }
+    .ui-button,  .ui-button-text .ui-button{  
+      font-size: 12px !important; 
+      margin-right: 22em !important;
+    }
+    .ui-dialog-titlebar-close{
+      margin: -10px 5 0 0 !important;
+    }
+  </style>
+  <script type='text/javascript' src='{% static 'jquery-1.12.3.min.js' %}'></script>
+  <script type='text/javascript' src='{% static 'jquery-ui.js' %}'></script>
+  <link rel='stylesheet' type='text/css' href='{% static 'jquery-ui.css' %}' />
+</head>
+<body>
+   <form id="form1" runat="server">
+      <div id="dialogMsg" title="First JqueryUI Example">
+        <div id="wrap">
+          <div id="left_col">
+            {% for question in latest_question_list %}
+              Hello this is my first {{ question.id }} example. 
+              <br>
+              <div id="progressbar"></div>
+              <br>
+            {% endfor %}
+          </div>
+          <div id="right_col">
+            {% for question in latest_question_list %}
+              Hello this is my first {{ question.id }} example. 
+              <br>
+              <div id="progressbar2"></div>
+              <br>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+   </form>
+</body>
+
+<script type="text/javascript">
+	$('#dialogMsg').dialog({
+        resizable: false,
+        minWidth: 650,
+        buttons: {
+		    "Ok, I'm done": function() {
+		    	$(this).dialog("close");
+			}
+    	}
+    }).css("font-size", "12px");
+
+</script>
+
+<script>
+  $('#progressbar').progressbar({value:75});
+  $('#progressbar > div').css({background: -webkit-repeating-linear-gradient(red, yellow 10%, green 20%);});
+</script>
+
+<script>
+  $( "#progressbar2" ).progressbar({
+    value: 65
+  });
+</script>
