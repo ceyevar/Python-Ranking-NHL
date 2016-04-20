@@ -65,3 +65,5 @@ build/
 tests/report/
 
 .idea/
+.vscode/
+*.sh
