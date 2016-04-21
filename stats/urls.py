@@ -6,5 +6,8 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^all/$', views.all, name='all stats'),
     url(r'^(?P<league_name>[A-Z]+)/$', views.league, name='league stats'),
-    url(r'^(?P<player1>\w(_\w+)*)/compare/(?P<player2>\w+(_\w+)*)/$', views.compare, name='compare players'),
+    url(r'^teams/(?P<team_id>[0-9]+)/$', views.team, name='team stats'),
+    url(r'^teams/(?P<team1_id>[0-9]+)/compare/(?P<team2_id>[0-9]+)/$', views.compare_teams, name='compare teams'),
+    url(r'^players/(?P<player_id>[0-9]+)/$', views.player, name='player stats'),
+    url(r'^players/(?P<player1_id>[0-9]+)/compare/(?P<player2_id>[0-9]+)/$', views.compare_players, name='compare players'),
 ]

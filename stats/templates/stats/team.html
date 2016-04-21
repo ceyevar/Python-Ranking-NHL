@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ team.Team_Name }}{% endblock %}
+
+{% block content %}
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				Player Name
+			</th>
+			<th>
+				Age
+			</th>
+			<th>
+				R/L Handed
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for player in team.Players %}
+			<tr>
+				<td>
+					<a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a>
+				</td>
+				<td>
+				{{ player.Age }}
+				</td>
+				<td>
+					{{ player.Shoots }}
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

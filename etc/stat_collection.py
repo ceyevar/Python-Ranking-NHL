@@ -10,6 +10,9 @@ def import_data():
     D = {}
     D['Leagues'] = []
 
+    team_id = 1
+    player_id = 1
+
     # Iterate through all files
     for num in range(len(team_files)):
         # Read in file
@@ -21,7 +24,7 @@ def import_data():
 
         # Create league object
         L = {}
-        L['League Name'] = league
+        L['League_Name'] = league
         L['Teams'] = []
 
         # Get headers for keys
@@ -32,6 +35,7 @@ def import_data():
             team_index = 0
             team_name = ''
             T = {}
+            T["id"] = team_id
             team_data = line[:-1].split(',')
             for team_stat in team_data:
                 if team_headers[team_index] == 'Team Name':
@@ -48,6 +52,7 @@ def import_data():
                 if team_name in player_data:
                     player_index = 0
                     P = {}
+                    P["id"] = player_id
                     player_data = row[:-1].split(',')
                     for player_stat in player_data:
                         # Makes Last, First convention for player name
@@ -59,9 +64,11 @@ def import_data():
 
                     # Append player data to team
                     T['Players'].append(P)
+                    player_id += 1
 
             # Append team data to league
             L['Teams'].append(T)
+            team_id += 1
 
         # Append league data to main object
         D['Leagues'].append(L)

@@ -1,1 +1,24 @@
-<h1>Index Page</h1>
+{% extends "base.html" %}
+
+{% block title %}Index Page{% endblock %}
+
+{% block content %}
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				League Name
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for league in leagues.Leagues %}
+			<tr>
+				<td>
+					<a href='{{ league.League_Name }}'>{{ league.League_Name }}</a>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
