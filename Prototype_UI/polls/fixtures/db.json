@@ -1,1 +1,28 @@
-[{"model": "polls.question", "pk": 1, "fields": {"question_text": "What's new?", "pub_date": "2016-04-20T03:05:14.705Z"}}, {"model": "polls.question", "pk": 2, "fields": {"question_text": "What's hanging?", "pub_date": "2016-04-20T06:00:34.545Z"}}, {"model": "polls.question", "pk": 3, "fields": {"question_text": "What's harring?", "pub_date": "2016-05-20T06:00:34.545Z"}}]
+[
+  {
+    "model": "polls.Player",
+    "pk": 1,
+    "fields": {
+		"name" : "John Smith",
+		"goals" : 20,
+		"assists" : 15,
+		"es_primary_pt_gp" : 1.02,
+		"pim" : 102,
+		"es_gf_rel" : 0.3252,
+		"es_ga" : 25
+    }
+  },
+  {
+    "model": "polls.Player",
+    "pk": 2,
+    "fields": {
+		"name" : "John Smit2h",
+		"goals" : 20,
+		"assists" : 15,
+		"es_primary_pt_gp" : 1.02,
+		"pim" : 102,
+		"es_gf_rel" : 0.3252,
+		"es_ga" : 25
+    }
+  }
+]
