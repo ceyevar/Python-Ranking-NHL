@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
-import json
+import numbers, decimal, json, operator
 
 
 f = open('./stats.json', 'r')
@@ -9,7 +9,10 @@ f.close()
 
 D = json.loads(json_data)
 
-# Create your views here.
+
+###################
+# Routes
+###################
 
 def index(request):
     return render(request, 'stats/index.html', {'leagues' : D})
@@ -21,7 +24,7 @@ def all(request):
 
 def league(request, league_name):
     for league in D["Leagues"]:
-        if league["League_Name"] == league_name:
+        if league["League Name"] == league_name:
             return render(request, 'stats/league.html', {'league' : league})
     raise Http404("League does not exist...")
 
@@ -39,7 +42,10 @@ def team(request, team_id):
     for league in D["Leagues"]:
         for team in league["Teams"]:
             if team["id"] == int(team_id):
-                return render(request, 'stats/team.html', {'team' : team})
+                avg = league_avg_teams(league)
+                maxmin = league_maxmin_teams(league)
+                percent = percentages(team, maxmin['max'], maxmin['min'])
+                return render(request, 'stats/team.html', {'team' : team, 'avg': avg, 'percent': percent, 'maxmin': maxmin})
     raise Http404("League does not exist...")
 
 
@@ -75,6 +81,56 @@ def compare_teams(request, team1_id, team2_id):
 
     # If both teams are found
     if(len(data["Teams"]) == 2):
-        return HttpResponse(data["Teams"][0]["Team_Name"] + " compared to " + data["Teams"][1]["Team_Name"])
+        return HttpResponse(data["Teams"][0]["Team Name"] + " compared to " + data["Teams"][1]["Team Name"])
     else:
         raise Http404("One or more teams cannot be found...")
+
+
+##################
+# Helper Functions
+##################
+
+def league_avg_teams(league):
+    avg = {}
+    for team in league["Teams"]:
+        for k, v in team.iteritems():
+            if k in avg:
+                if isinstance(v, numbers.Number):
+                    avg[k] += v
+            else:
+                if isinstance(v, numbers.Number):
+                    avg[k] = v
+    for k, v in avg.iteritems():
+        avg[k] = v/len(league["Teams"])
+    return avg
+
+
+def league_maxmin_teams(league):
+    max = {}
+    min = {}
+    for team in league["Teams"]:
+        for k,v in team.iteritems():
+            if k in max and k in min:
+                if isinstance(v, numbers.Number):
+                    if max[k] < v:
+                        max[k] = v
+                    if min[k] > v:
+                        min[k] = v
+            else:
+                if isinstance(v, numbers.Number):
+                    max[k] = v
+                    min[k] = v
+    return { 'max': max, 'min': min }
+
+
+def percentages(team, max, min):
+    result = {}
+    for k,v in team.iteritems():
+        if isinstance(v, numbers.Number):
+            numerator = (float(v) - float(min[k]))
+            denominator = (float(max[k]) - float(min[k]))
+            try:
+                result[k] = ((numerator/denominator) * 100)
+            except:
+                result[k] = 100
+    return result

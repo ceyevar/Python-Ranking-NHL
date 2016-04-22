@@ -1,36 +1,54 @@
 {% extends "base.html" %}
+{% load stats_extras %}
 
-{% block title %}{{ team.Team_Name }}{% endblock %}
+{% block title %}{{ team|get:'Team Name' }}'s Stats{% endblock %}
 
 {% block content %}
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				Player Name
-			</th>
-			<th>
-				Age
-			</th>
-			<th>
-				R/L Handed
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for player in team.Players %}
+<div class="col-md-10">
+	<h1 class="text-center">{{ team|get:'Team Name' }}</h1>
+	<table class="table">
+		<thead>
 			<tr>
-				<td>
-					<a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a>
-				</td>
-				<td>
-				{{ player.Age }}
-				</td>
-				<td>
-					{{ player.Shoots }}
-				</td>
+				<th>
+				</th>
+				<th>
+					{{ team|get:'Team Name' }}'s Stats
+				</th>
+				<th>
+					Average Stats
+				</th>
 			</tr>
+		</thead>
+		<tbody>
+			{% for key, value in team.items %}
+				{% if value|isnumber and key != 'id' %}
+					<tr>
+						<td>
+							<b>{{ key }}:</b>
+						</td>
+						<td>
+							{{ value }}
+						</td>
+						<td>
+							<div class="progress">
+								<div class="progress-bar" role="progressbar" aria-valuenow="{{ value }}" style="width:{{ percent|get:key }}%">
+									<!--<div class="text-left">{{ maxmin.min|get:key }}</span>-->
+									<!--<div class="text-right">{{ maxmin.max|get:key }}</span>-->
+								</div>
+							</div>
+						</td>
+					</tr>
+				{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+<div class="col-md-2">
+	<p><h3 class="text-center">Players ({{ team.Players|length }})</h3></p>
+	<div class="scrollable border-above border-left border-below">
+		{% for player in team.Players %}
+		<p class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a></p>
 		{% endfor %}
-	</tbody>
-</table>
+	</div>
+</div>
 {% endblock %}

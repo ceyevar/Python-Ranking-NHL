@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load stats_extras %}
 
 {% block title %}Index Page{% endblock %}
 
@@ -15,7 +16,7 @@
 		{% for league in leagues.Leagues %}
 			<tr>
 				<td>
-					<a href='{{ league.League_Name }}'>{{ league.League_Name }}</a>
+					<a href="{{ league|get:'League Name' }}">{{ league|get:'League Name' }}</a>
 				</td>
 			</tr>
 		{% endfor %}
