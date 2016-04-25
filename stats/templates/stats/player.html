@@ -1,15 +1,53 @@
 {% extends "base.html" %}
 {% load stats_extras %}
 
-{% block title %}{{ player.Name }}{% endblock %}
+{% block title %}{{ player|get:'Name'|formatname }}'s Stats{% endblock %}
 
 {% block content %}
-
-<div class="text-center">
-	<b>Player Name:</b> {{ player.Name }}
-	</br>
-	</br>
-	Stats for player will go here along with algorithm analysis
+<div class="col-md-10">
+	<h1 class="text-center">{{ player|get:'Name'|formatname }}</h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+				</th>
+				<th>
+					{{ player|get:'Name'|formatname }}'s Stats
+				</th>
+				<th>
+					Average Stats
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for key, value in player.items %}
+				{% if value|isnumber and key != 'id' %}
+					<tr>
+						<td>
+							<b>{{ key }}:</b>
+						</td>
+						<td>
+							{{ value }}
+						</td>
+						<td>
+							<div class="progress">
+								<div class="progress-bar {{ avg|get:key|bartype:value }}" role="progressbar" aria-valuenow="{{ value }}" style="width:{{ percent|get:key }}%">
+									<!--{{ avg|get:key }}-->
+								</div>
+							</div>
+						</td>
+					</tr>
+				{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
 </div>
-
+<div class="col-md-2">
+	<p><h3 class="text-center">Teammates ({{ teammates|length }})</h3></p>
+	<div class="scrollable border-above border-left border-below">
+		{% for player in teammates %}
+		<p class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a></p>
+		{% endfor %}
+	</div>
+</div>
 {% endblock %}

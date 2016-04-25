@@ -31,9 +31,8 @@
 						</td>
 						<td>
 							<div class="progress">
-								<div class="progress-bar" role="progressbar" aria-valuenow="{{ value }}" style="width:{{ percent|get:key }}%">
-									<!--<div class="text-left">{{ maxmin.min|get:key }}</span>-->
-									<!--<div class="text-right">{{ maxmin.max|get:key }}</span>-->
+								<div class="progress-bar {{ avg|get:key|bartype:value }}" role="progressbar" aria-valuenow="{{ value }}" style="width:{{ percent|get:key }}%">
+									<!--{{ avg|get:key }}-->
 								</div>
 							</div>
 						</td>
