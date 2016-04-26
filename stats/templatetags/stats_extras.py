@@ -47,3 +47,27 @@ def bartype(avg, value):
 		return 'progress-bar-danger'
 	else:
 		return 'progress-bar-warning'
+
+
+@register.filter()
+def comparisoncolors(player1, player2):
+	if player1 > player2:
+		return 'progress-bar-success'
+	elif player1 < player2:
+		return 'progress-bar-danger'
+	else:
+		return 'progress-bar-info'
+
+
+@register.filter()
+def comparisonlength(player1, player2):
+	try:
+		length = float(player1) / (float(player1) + float(player2)) * 100
+	except:
+		return 50
+	else:
+		if length > 99:
+			length = 99
+		elif length < 1:
+			length = 1
+		return length

@@ -63,13 +63,7 @@ def compare_players(request, player1_id, player2_id):
 
     # If both players are found
     if(len(data["Players"]) == 2):
-        player1_name = data["Players"][0]["Name"]
-        player1_name = player1_name.split(',')
-        player1_name = player1_name[1] + ' ' + player1_name[0]
-        player2_name = data["Players"][1]["Name"]
-        player2_name = player2_name.split(',')
-        player2_name = player2_name[1] + ' ' + player2_name[0]
-        return HttpResponse(player1_name + " compared to " + player2_name)
+        return render(request, 'stats/compare_players.html', {'player1': data['Players'][0], 'player2': data['Players'][1]})
     else:
         raise Http404("One or more players cannot be found...")
 
@@ -124,6 +118,7 @@ def local_maxmin_stats(data, datatype):
                     max[k] = v
                     min[k] = v
     return { 'max': max, 'min': min }
+
 
 def percentages(data, max, min):
     result = {}
