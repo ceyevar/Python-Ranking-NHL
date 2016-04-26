@@ -1,6 +1,6 @@
 body, html {
   margin: 0;
-  height:100%;
+  height:50vh;
   background-color: honeydew
 }
 
@@ -24,3 +24,28 @@ body, html {
 .border-below {
   border-bottom: 1px solid #333;
 }
+
+.progress-bar-purple {
+      background-color: dodgerblue !important;
+}
+
+.progress-bar-orange {
+      background-color: mediumseagreen !important;
+}
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
+}
+
+.yellow {
+  color: yellow;
+}
+
+.blue {
+  color: blue;
+}
+

@@ -18,7 +18,7 @@ def get(data, key):
 
 @register.filter()
 def dividedby(numerator, denominator):
-	if isnumber(numerator) and isnumber(denominator):
+	if isnumber(numerator) and isnumber(denominator) and denominator != 0:
   		return numerator/denominator
 	else:
 		return 0
@@ -52,11 +52,11 @@ def bartype(avg, value):
 @register.filter()
 def comparisoncolors(player1, player2):
 	if player1 > player2:
-		return 'progress-bar-success'
+		return 'glyphicon glyphicon-triangle-top green'
 	elif player1 < player2:
-		return 'progress-bar-danger'
+		return 'glyphicon glyphicon-triangle-bottom red'
 	else:
-		return 'progress-bar-info'
+		return 'glyphicon glyphicon-minus yellow'
 
 
 @register.filter()
@@ -71,3 +71,18 @@ def comparisonlength(player1, player2):
 		elif length < 1:
 			length = 1
 		return length
+
+
+@register.filter()
+def position(pos):
+	switcher = {
+        'C': "Center",
+		'LW': "Left Winger",
+        'RW': "Right Winger",
+		'D': "Defenseman",
+		'G': "Goaltender",
+		'F': "Forward",
+		'LD': "Left Defenseman",
+		'RD': "Right Defenseman"
+    }
+	return switcher.get(pos, pos)

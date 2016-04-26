@@ -15,7 +15,7 @@
 					{{ player|get:'Name'|formatname }}'s Stats
 				</th>
 				<th>
-					Average Stats
+					Average Stats for {{ player|get:'Position'|position }}s
 				</th>
 			</tr>
 		</thead>
@@ -43,10 +43,10 @@
 	</table>
 </div>
 <div class="col-md-2">
-	<p><h3 class="text-center">Teammates ({{ teammates|length }})</h3></p>
+	<p><h3 class="text-center">{{ player|get:'Position'|position }}s ({{ position|length }})</h3></p>
 	<div class="scrollable border-above border-left border-below">
-		{% for player in teammates %}
-		<p class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a></p>
+		{% for compplayer in position %}
+		<p class="text-center"><a href='/stats/players/{{ player.id }}/compare/{{ compplayer.id }}'>{{ compplayer.Name }}</a></p>
 		{% endfor %}
 	</div>
 </div>

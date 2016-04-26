@@ -34,10 +34,11 @@ def player(request, player_id):
         for team in league["Teams"]:
             for player in team["Players"]:
                 if player["id"] == int(player_id):
-                    avg = local_avg_stats(team, 'Players')
-                    maxmin = local_maxmin_stats(team, 'Players')
+                    Players = collect_players(player['Position'], player['Name'])
+                    avg = avg_stats(Players)
+                    maxmin = maxmin_stats(Players)
                     percent = percentages(player, maxmin['max'], maxmin['min'])
-                    return render(request, 'stats/player.html', {'player' : player, 'avg': avg, 'percent': percent, 'maxmin': maxmin, 'teammates':team['Players'] })
+                    return render(request, 'stats/player.html', {'player' : player, 'avg': avg, 'percent': percent, 'maxmin': maxmin, 'position': Players })
     raise Http404("League does not exist...")
 
 
@@ -45,11 +46,12 @@ def team(request, team_id):
     for league in D["Leagues"]:
         for team in league["Teams"]:
             if team["id"] == int(team_id):
-                avg = local_avg_stats(league, 'Teams')
-                maxmin = local_maxmin_stats(league, 'Teams')
+                Teams = get_all_teams()
+                avg = avg_stats(Teams)
+                maxmin = maxmin_stats(Teams)
                 percent = percentages(team, maxmin['max'], maxmin['min'])
                 return render(request, 'stats/team.html', {'team' : team, 'avg': avg, 'percent': percent, 'maxmin': maxmin})
-    raise Http404("League does not exist...")
+    raise Http404("Team does not exist...")
 
 
 def compare_players(request, player1_id, player2_id):
@@ -87,9 +89,9 @@ def compare_teams(request, team1_id, team2_id):
 # Helper Functions
 ##################
 
-def local_avg_stats(data, datatype):
+def avg_stats(data):
     avg = {}
-    for item in data[datatype]:
+    for item in data:
         for k, v in item.iteritems():
             if k in avg:
                 if isinstance(v, numbers.Number):
@@ -98,14 +100,14 @@ def local_avg_stats(data, datatype):
                 if isinstance(v, numbers.Number):
                     avg[k] = v
     for k, v in avg.iteritems():
-        avg[k] = v/len(data[datatype])
+        avg[k] = v/len(data)
     return avg
 
 
-def local_maxmin_stats(data, datatype):
+def maxmin_stats(data):
     max = {}
     min = {}
-    for item in data[datatype]:
+    for item in data:
         for k,v in item.iteritems():
             if k in max and k in min:
                 if isinstance(v, numbers.Number):
@@ -131,3 +133,23 @@ def percentages(data, max, min):
             except:
                 result[k] = 100
     return result
+
+
+def collect_players(position, name):
+    data = {}
+    data['Players'] = []
+    for league in D['Leagues']:
+        for team in league['Teams']:
+            for player in team['Players']:
+                if player['Position'] == position and player['Name'] != name:
+                    data['Players'].append(player)
+    return data['Players']
+
+
+def get_all_teams():
+    data = {}
+    data['Teams'] = []
+    for league in D['Leagues']:
+        for team in league['Teams']:
+            data['Teams'].append(team)
+    return data['Teams']

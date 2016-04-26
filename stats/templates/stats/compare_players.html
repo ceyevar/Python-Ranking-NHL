@@ -4,52 +4,56 @@
 {% block title %}{{ player1|get:'Name'|formatname }} vs. {{ player2|get:'Name'|formatname }}{% endblock %}
 
 {% block content %}
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				<!--Stat Name-->
-			</th>
-			<th align="right">
-				{{ player1|get:'Name'|formatname }}
-			</th>
-			<th>
-				<!-- Bar -->
-			</th>
-			<th>
-				{{ player2|get:'Name'|formatname }}
-			</th>
+<div class="col-md-10">
+	<h1 class="text-center">{{ player1|get:'Name'|formatname }} vs. {{ player2|get:'Name'|formatname }}</h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+				</th>
+				<th class="text-right">
+					{{ player1|get:'Name'|formatname }}
+				</th>
+				<th class="text-center">
+					Comparison
+				</th>
+				<th>
+					{{ player2|get:'Name'|formatname }}
+				</th>
 
-		</tr>
-	</thead>
-	<tbody>
-		{% for key, value in player1.items %}
-			{% if value|isnumber and key != 'id' and player2|get:key|isnumber %}
-			{% with value1=player1|get:key value2=player2|get:key %}
-				<tr>
-					<td width="45%">
-						<b>{{ key }}</b>
-					</td>
-					<td width="10%" align="right">
-						{{ value1 }}
-					</td>
-					<td width="35%" alight="center">
-						<div class="progress">
-							<div class="progress-bar {{ value1|comparisoncolors:value2 }}" role="progressbar" aria-valuenow="{{ value1 }}" style="width:{{ value1|comparisonlength:value2 }}%">
-								<!--{{ value1 }}-->
+			</tr>
+		</thead>
+		<tbody>
+			{% for key, value in player1.items %}
+				{% if value|isnumber and key != 'id' and player2|get:key|isnumber %}
+				{% with value1=player1|get:key value2=player2|get:key %}
+					<tr>
+						<td width="35%">
+							<b>{{ key }}</b>
+						</td>
+						<td width="15%" align="right">
+							{{ value1 }}
+							<span class="{{ value1|comparisoncolors:value2 }}" aria-hidden="true"></span>
+						</td>
+						<td width="35%" alight="center">
+							<div class="progress">
+								<div class="progress-bar progress-bar-blue" role="progressbar" aria-valuenow="{{ value1 }}" style="width:{{ value1|comparisonlength:value2 }}%">
+									<!--{{ value1 }}-->
+								</div>
+								<div class="progress-bar progress-bar-orange" role="progressbar" aria-valuenow="{{ value2 }}" style="width:{{ value2|comparisonlength:value1 }}%">
+									<!--{{ value2 }}-->
+								</div>
 							</div>
-							<div class="progress-bar {{ value2|comparisoncolors:value1 }}" role="progressbar" aria-valuenow="{{ value2 }}" style="width:{{ value2|comparisonlength:value1 }}%">
-								<!--{{ value2 }}-->
-							</div>
-						</div>
-					</td>
-					<td width="10%">
-						{{ value2 }}
-					</td>
-				</tr>
-			{% endwith %}
-			{% endif %}
-		{% endfor %}
-	</tbody>
-</table>
+						</td>
+						<td width="15%">
+							<span class="{{ value2|comparisoncolors:value1 }}" aria-hidden="true"></span>
+							{{ value2 }}
+						</td>
+					</tr>
+				{% endwith %}
+				{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
 {% endblock %}
