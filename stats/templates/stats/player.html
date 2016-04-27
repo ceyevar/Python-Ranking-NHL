@@ -43,9 +43,9 @@
 	</table>
 </div>
 <div class="col-md-2">
-	<p><h3 class="text-center">{{ player|get:'Position'|position }}s ({{ position|length }})</h3></p>
+	<p><h3 class="text-center">Similar Players ({{ similar|length }})</h3></p>
 	<div class="scrollable border-above border-left border-below">
-		{% for compplayer in position %}
+		{% for compplayer in similar %}
 		<p class="text-center"><a href='/stats/players/{{ player.id }}/compare/{{ compplayer.id }}'>{{ compplayer.Name }}</a></p>
 		{% endfor %}
 	</div>

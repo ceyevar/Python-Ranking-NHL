@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 import numbers, decimal, json, operator
+from helpers import clustering
 
 
 f = open('./stats.json', 'r')
@@ -34,11 +35,15 @@ def player(request, player_id):
         for team in league["Teams"]:
             for player in team["Players"]:
                 if player["id"] == int(player_id):
-                    Players = collect_players(player['Position'], player['Name'])
+                    Players = collect_players(player['Position'])
+                    for k,v in clustering.cluster(Players, 10, 2).iteritems():
+                        for p in v:
+                            if p['id'] == player['id']:
+                                similar_players = v
                     avg = avg_stats(Players)
                     maxmin = maxmin_stats(Players)
                     percent = percentages(player, maxmin['max'], maxmin['min'])
-                    return render(request, 'stats/player.html', {'player' : player, 'avg': avg, 'percent': percent, 'maxmin': maxmin, 'position': Players })
+                    return render(request, 'stats/player.html', {'player' : player, 'avg': avg, 'percent': percent, 'maxmin': maxmin, 'similar': similar_players })
     raise Http404("League does not exist...")
 
 
@@ -135,13 +140,13 @@ def percentages(data, max, min):
     return result
 
 
-def collect_players(position, name):
+def collect_players(position):
     data = {}
     data['Players'] = []
     for league in D['Leagues']:
         for team in league['Teams']:
             for player in team['Players']:
-                if player['Position'] == position and player['Name'] != name:
+                if player['Position'] == position:
                     data['Players'].append(player)
     return data['Players']
 
