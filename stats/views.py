@@ -4,11 +4,28 @@ import numbers, decimal, json, operator, math
 from helpers import clustering
 
 
+###################
+# Globals
+###################
+
 f = open('./stats.json', 'r')
 json_data = f.read()
 f.close()
 
 D = json.loads(json_data)
+
+def get_all_players():
+    Players = []
+    for league in D['Leagues']:
+        if league['League Name'] != 'AHL':
+            for team in league['Teams']:
+                for player in team['Players']:
+                    Players.append(player)
+    return Players
+
+All_Players = get_all_players()
+
+C = clustering.cluster(All_Players, 10, int(len(All_Players) * 0.047))
 
 
 ###################
@@ -36,7 +53,7 @@ def player(request, player_id):
             for player in team["Players"]:
                 if player["id"] == int(player_id):
                     Players = collect_players(player['Position'])
-                    for k,v in clustering.cluster(Players, 10, int(len(Players) * 0.047)).iteritems():
+                    for k,v in C.iteritems():
                         if player in v:
                             similar_players = v
                     avg = avg_stats(Players)
@@ -193,9 +210,9 @@ def collect_players(position):
 
 
 def get_all_teams():
-    data = {}
-    data['Teams'] = []
+    Teams = []
     for league in D['Leagues']:
-        for team in league['Teams']:
-            data['Teams'].append(team)
-    return data['Teams']
+        if league['League Name'] != 'AHL':
+            for team in league['Teams']:
+                Teams.append(team)
+    return Teams
