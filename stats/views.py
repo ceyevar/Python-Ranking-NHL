@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
-import numbers, decimal, json, operator
+import numbers, decimal, json, operator, math
 from helpers import clustering
 
 
@@ -36,14 +36,15 @@ def player(request, player_id):
             for player in team["Players"]:
                 if player["id"] == int(player_id):
                     Players = collect_players(player['Position'])
-                    for k,v in clustering.cluster(Players, 10, 2).iteritems():
-                        for p in v:
-                            if p['id'] == player['id']:
-                                similar_players = v
+                    for k,v in clustering.cluster(Players, 10, int(len(Players) * 0.047)).iteritems():
+                        if player in v:
+                            similar_players = v
                     avg = avg_stats(Players)
+                    var = variance(Players, avg)
+                    dev = deviation(var)
+                    player_dev = individual_deviation(player, dev, avg)
                     maxmin = maxmin_stats(Players)
-                    percent = percentages(player, maxmin['max'], maxmin['min'])
-                    return render(request, 'stats/player.html', {'player' : player, 'avg': avg, 'percent': percent, 'maxmin': maxmin, 'similar': similar_players })
+                    return render(request, 'stats/player.html', {'player' : player, 'avg': avg, 'percent': player_dev, 'similar': similar_players })
     raise Http404("League does not exist...")
 
 
@@ -53,24 +54,28 @@ def team(request, team_id):
             if team["id"] == int(team_id):
                 Teams = get_all_teams()
                 avg = avg_stats(Teams)
+                var = variance(Teams, avg)
+                dev = deviation(var)
+                team_dev = individual_deviation(team, dev, avg)
                 maxmin = maxmin_stats(Teams)
                 percent = percentages(team, maxmin['max'], maxmin['min'])
-                return render(request, 'stats/team.html', {'team' : team, 'avg': avg, 'percent': percent, 'maxmin': maxmin})
+                return render(request, 'stats/team.html', {'team' : team, 'avg': avg, 'percent': team_dev})
     raise Http404("Team does not exist...")
 
 
 def compare_players(request, player1_id, player2_id):
-    data = {}
-    data["Players"] = []
     for league in D["Leagues"]:
         for team in league["Teams"]:
             for player in team["Players"]:
-                if player["id"] == int(player1_id) or player["id"] == int(player2_id):
-                    data["Players"].append(player)
+                if player["id"] == int(player1_id):
+                    player1 = player
+                if player["id"] == int(player2_id):
+                    player2 = player
+
 
     # If both players are found
-    if(len(data["Players"]) == 2):
-        return render(request, 'stats/compare_players.html', {'player1': data['Players'][0], 'player2': data['Players'][1]})
+    if player1 is not None and player2 is not None:
+        return render(request, 'stats/compare_players.html', {'player1': player1, 'player2': player2})
     else:
         raise Http404("One or more players cannot be found...")
 
@@ -109,6 +114,41 @@ def avg_stats(data):
     return avg
 
 
+def variance(data, avg):
+    var = {}
+    for k,v in avg.iteritems():
+        for item in data:
+            if k in item:
+                if k not in var:
+                    var[k] = 0
+                var[k] += (item[k] - v) ** 2
+        if k in var:
+            var[k] = var[k]/len(data)
+    return var
+
+
+def deviation(var):
+    for value in var.values():
+        value = math.sqrt(value)
+    return var
+
+
+def individual_deviation(data, dev, avg):
+    pd = {}
+    for k,v in dev.iteritems():
+        if k in data:
+            numerator = (float(data[k]) - float(avg[k] - v))
+            denominator = (float(avg[k] + v) - float(avg[k] - v))
+            try:
+                pd[k] = ((numerator/denominator) * 100)
+            except:
+                pd[k] = 50
+            else:
+                if pd[k] == 0:
+                    pd[k] = 1
+    return pd
+
+
 def maxmin_stats(data):
     max = {}
     min = {}
@@ -144,10 +184,11 @@ def collect_players(position):
     data = {}
     data['Players'] = []
     for league in D['Leagues']:
-        for team in league['Teams']:
-            for player in team['Players']:
-                if player['Position'] == position:
-                    data['Players'].append(player)
+        if league['League Name'] != 'AHL':
+            for team in league['Teams']:
+                for player in team['Players']:
+                    if player['Position'] == position:
+                        data['Players'].append(player)
     return data['Players']
 
 

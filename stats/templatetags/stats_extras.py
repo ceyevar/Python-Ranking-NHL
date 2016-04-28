@@ -36,17 +36,15 @@ def formatname(value):
 
 
 @register.filter()
-def bartype(avg, value):
-	if avg < 1:
-		normal = 1
-	else:
-		normal = avg
-	if value > avg + math.log(normal):
+def bartype(value):
+	if value > 100:
+		return 'progress-bar-success progress-bar-striped active'
+	elif value > 65:
 		return 'progress-bar-success'
-	elif value < avg - math.log(normal):
+	elif value < 35:
 		return 'progress-bar-danger'
 	else:
-		return 'progress-bar-warning'
+		return 'progress-bar-info'
 
 
 @register.filter()
@@ -86,3 +84,17 @@ def position(pos):
 		'RD': "Right Defenseman"
     }
 	return switcher.get(pos, pos)
+
+
+@register.filter()
+def avgcheck(dev):
+	total = 0
+	for value in dev.values():
+		total += value
+	total = total/len(dev)
+	if total > 65:
+		return 'glyphicon glyphicon-triangle-top green'
+	elif total < 35:
+		return 'glyphicon glyphicon-triangle-bottom red'
+	else:
+		return 'glyphicon glyphicon-minus yellow'

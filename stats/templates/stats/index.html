@@ -4,22 +4,24 @@
 {% block title %}Index Page{% endblock %}
 
 {% block content %}
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				League Name
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for league in leagues.Leagues %}
-			<tr>
-				<td>
-					<a href="{{ league|get:'League Name' }}">{{ league|get:'League Name' }}</a>
-				</td>
-			</tr>
-		{% endfor %}
-	</tbody>
-</table>
+
+<h1 class="text-center">Leagues</h1>
+
+{% for league in leagues.Leagues %}
+{% if league|get:'League Name' != 'AHL' %}
+	<!--<tr>
+		<td>
+			<a href="{{ league|get:'League Name' }}">{{ league|get:'League Name' }}</a>
+		</td>
+	</tr>-->
+	<div class='col-md-3'style='margin:25vh auto;'>
+	<span class="round-button">
+		<div class="round-button-circle">
+			<a href="{{ league|get:'League Name' }}" class="round-button">{{ league|get:'League Name' }}</a>
+		</div>
+	</span>
+	</div>
+{% endif %}
+{% endfor %}
+
 {% endblock %}

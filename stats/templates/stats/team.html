@@ -21,18 +21,18 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for key, value in team.items %}
+			{% for key, value in percent.items %}
 				{% if value|isnumber and key != 'id' %}
 					<tr>
 						<td>
 							<b>{{ key }}:</b>
 						</td>
 						<td>
-							{{ value }}
+							{{ team|get:key }}
 						</td>
 						<td>
 							<div class="progress">
-								<div class="progress-bar {{ avg|get:key|bartype:value }}" role="progressbar" aria-valuenow="{{ value }}" style="width:{{ percent|get:key }}%">
+								<div class="progress-bar {{ value|bartype }}" role="progressbar" aria-valuenow="{{ team|get:key }}" style="width:{{ percent|get:key }}%">
 									<!--{{ avg|get:key }}-->
 								</div>
 							</div>

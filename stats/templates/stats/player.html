@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="col-md-10">
-	<h1 class="text-center">{{ player|get:'Name'|formatname }}</h1>
+	<h1 class="text-center">{{ player|get:'Name'|formatname }} <span class="{{ percent|avgcheck }}" aria-hidden="true"></span></h1>
 	<table class="table">
 		<thead>
 			<tr>
@@ -15,23 +15,23 @@
 					{{ player|get:'Name'|formatname }}'s Stats
 				</th>
 				<th>
-					Average Stats for {{ player|get:'Position'|position }}s
+					Standard Deviation for {{ player|get:'Position'|position }}
 				</th>
 			</tr>
 		</thead>
 		<tbody>
-			{% for key, value in player.items %}
+			{% for key, value in percent.items %}
 				{% if value|isnumber and key != 'id' %}
 					<tr>
 						<td>
 							<b>{{ key }}:</b>
 						</td>
 						<td>
-							{{ value }}
+							{{ player|get:key }}
 						</td>
 						<td>
 							<div class="progress">
-								<div class="progress-bar {{ avg|get:key|bartype:value }}" role="progressbar" aria-valuenow="{{ value }}" style="width:{{ percent|get:key }}%">
+								<div class="progress-bar {{ value|bartype }}" role="progressbar" aria-valuenow="{{ player|get:key }}" style="width:{{ value }}%">
 									<!--{{ avg|get:key }}-->
 								</div>
 							</div>
