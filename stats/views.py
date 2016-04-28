@@ -25,7 +25,7 @@ def get_all_players():
 
 All_Players = get_all_players()
 
-C = clustering.cluster(All_Players, 10, int(len(All_Players) * 0.047))
+C = clustering.cluster(All_Players, 20, int(len(All_Players) * 0.047))
 
 
 ###################
