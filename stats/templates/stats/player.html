@@ -10,6 +10,7 @@
 		<thead>
 			<tr>
 				<th>
+					<button class="button" onclick="AddPlayer({{ player.id }})"><span class="glyphicon glyphicon-plus green" aria-hidden="true"></span></button>
 				</th>
 				<th>
 					{{ player|get:'Name'|formatname }}'s Stats
@@ -21,7 +22,7 @@
 		</thead>
 		<tbody>
 			{% for key, value in percent.items %}
-				{% if value|isnumber and key != 'id' %}
+				{% if value|isnumber and key != 'id' and key != 'Number' and value >= 1 %}
 					<tr>
 						<td>
 							<b>{{ key }}:</b>
@@ -50,4 +51,13 @@
 		{% endfor %}
 	</div>
 </div>
+<script>
+	function AddPlayer(playerid){
+		$.ajax({url: "/stats/teams/myteam/add/" + playerid + "/", success: function(result){
+			alert(result);
+		}, error: function(){
+			alert("Failed to contact server");
+		}});
+	}
+</script>
 {% endblock %}

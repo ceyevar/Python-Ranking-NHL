@@ -27,6 +27,14 @@ All_Players = get_all_players()
 
 C = clustering.cluster(All_Players, 20, int(len(All_Players) * 0.047))
 
+T = { 'Players': [] }
+
+# ids = [1121, 997, 999, 2165, 1555, 1642, 2689, 1015, 1189, 1991, 2003, 1865, 2351, 2211, 1265, 1488, 2121]
+# for league in D["Leagues"]:
+#     for team in league["Teams"]:
+#         for player in team["Players"]:
+#             if player["id"] in ids:
+#                 T['Players'].append(player)
 
 ###################
 # Routes
@@ -89,7 +97,6 @@ def compare_players(request, player1_id, player2_id):
                 if player["id"] == int(player2_id):
                     player2 = player
 
-
     # If both players are found
     if player1 is not None and player2 is not None:
         return render(request, 'stats/compare_players.html', {'player1': player1, 'player2': player2})
@@ -97,19 +104,81 @@ def compare_players(request, player1_id, player2_id):
         raise Http404("One or more players cannot be found...")
 
 
-def compare_teams(request, team1_id, team2_id):
-    data = {}
-    data["Teams"] = []
-    for league in D["Leagues"]:
-        for team in league["Teams"]:
-            if team["id"] == int(team1_id) or team["id"] == int(team2_id):
-                data["Teams"].append(team)
+def team_builder(request):
+    teamavgs = {}
+    avgs = {}
+    myavg = {}
 
-    # If both teams are found
-    if(len(data["Teams"]) == 2):
-        return HttpResponse(data["Teams"][0]["Team Name"] + " compared to " + data["Teams"][1]["Team Name"])
+    # Calculate my avg
+    myk = {}
+    for player in T['Players']:
+         for k,v in player.iteritems():
+            if isinstance(v, numbers.Number) and k != 'id' and k != 'Number':
+                if k not in myavg:
+                    myk[k] = 0
+                    myavg[k] = 0
+                myk[k] += 1
+                myavg[k] += v
+    for k,v in myavg.iteritems():
+        myavg[k] = v/myk[k]
+
+    # Calculate team avg for each player stat
+    for league in D['Leagues']:
+        if league['League Name'] != 'AHL':
+            for team in league['Teams']:
+                tdata = {}
+                tkdata = {}
+                for player in team['Players']:
+                    for k,v in player.iteritems():
+                        if isinstance(v, numbers.Number) and k != 'id' and k != 'Number':
+                            if k not in tdata:
+                                tkdata[k] = 0
+                                tdata[k] = 0
+                            tkdata[k] += 1
+                            tdata[k] += v
+                for k,v in tdata.iteritems():
+                    tdata[k] = v/tkdata[k]
+                teamavgs[team['id']] = tdata
+
+    # Calculate avg of each stat per team
+    kdata = {}
+    for team in teamavgs.values():
+        for k,v in team.iteritems():
+            if k not in avgs:
+                kdata[k] = 0
+                avgs[k] = 0
+            kdata[k] += 1
+            avgs[k] += v
+    for k,v in avgs.iteritems():
+            avgs[k] = v/kdata[k]
+
+    var = variance(teamavgs.values(), avgs)
+    dev = deviation(var)
+    team_dev = individual_deviation(myavg, dev, avgs)
+
+    if request.is_ajax():
+        return render(request, 'stats/_myteam.html', { 'team': T, 'myavg': myavg, 'avgs': avgs, 'percent': team_dev })
     else:
-        raise Http404("One or more teams cannot be found...")
+        return render(request, 'stats/myteam.html', { 'team': T, 'myavg': myavg, 'avgs': avgs, 'percent': team_dev })
+
+
+def add_player(request, playerid):
+    for player in All_Players:
+        if player['id'] == int(playerid):
+            if player not in T['Players']:
+                T['Players'].append(player)
+                return HttpResponse('Successfully added player to team!')
+            else:
+                return HttpResponse('Player already exists on team.')
+    return HttpResponse('Player not found.')
+
+
+def remove_player(request, playerid):
+    for player in T['Players']:
+        if player['id'] == int(playerid):
+            T['Players'].remove(player);
+            return HttpResponse('Successfully removed player from team!')
+    return HttpResponse('Player not found.')
 
 
 ##################
@@ -145,9 +214,10 @@ def variance(data, avg):
 
 
 def deviation(var):
-    for value in var.values():
-        value = math.sqrt(value)
-    return var
+    dev = {}
+    for k,v in var.iteritems():
+        dev[k] = math.sqrt(v)
+    return dev
 
 
 def individual_deviation(data, dev, avg):

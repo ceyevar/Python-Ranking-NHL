@@ -22,7 +22,7 @@
 		</thead>
 		<tbody>
 			{% for key, value in percent.items %}
-				{% if value|isnumber and key != 'id' %}
+				{% if value|isnumber and key != 'id' and value >= 1%}
 					<tr>
 						<td>
 							<b>{{ key }}:</b>

@@ -1,0 +1,44 @@
+{% load stats_extras %}
+<div id="Stats" class="col-md-10">
+	<h1 class="text-center">My Team</h1>
+	{% if team.Players|length > 10 %}
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					Stat Name
+				</th>
+				<th>
+					My Team's Stats
+				</th>
+				<th>
+					Average Stat Deviation
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for key, value in percent.items %}
+				{% if value|isnumber and key != 'id' and value >= 1%}
+					<tr>
+						<td>
+							<b>{{ key }}:</b>
+						</td>
+						<td>
+							{{ myavg|get:key }}
+						</td>
+						<td>
+							<div class="progress">
+								<div class="progress-bar {{ value|bartype }}" role="progressbar" aria-valuenow="{{ myavg|get:key }}" style="width:{{ percent|get:key }}%">
+									<!--{{ myavg|get:key }}-->
+								</div>
+							</div>
+						</td>
+					</tr>
+				{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+	{% else %}
+	<div class="text-center">Please add more players to team to see statistics</div>
+	{% endif %}
+</div>
