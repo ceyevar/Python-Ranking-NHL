@@ -1,6 +1,6 @@
 from django import template
 from django.template.defaultfilters import stringfilter
-import numbers, math
+import numbers, math, json
 
 register = template.Library()
 
@@ -98,3 +98,11 @@ def avgcheck(dev):
 		return 'glyphicon glyphicon-triangle-bottom red'
 	else:
 		return 'glyphicon glyphicon-minus yellow'
+
+
+@register.assignment_tag
+def get_all_data():
+	f = open('./stats.json', 'r')
+	json_data = f.read()
+	f.close()
+	return json.loads(json_data)

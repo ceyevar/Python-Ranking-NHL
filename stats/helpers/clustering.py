@@ -64,8 +64,9 @@ def calculate_new_seeds(clusters, players):
 		for index in v:
 			b = numpy.array(calculate_vector(players[index]))
 			a += b
-		a = a/len(v)
-		centroids.append(a.tolist())
+		if len(v) > 0:
+			a = a/len(v)
+			centroids.append(a.tolist())
 	return centroids
 
 

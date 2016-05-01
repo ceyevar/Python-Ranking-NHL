@@ -50,9 +50,20 @@
 <div class="col-md-2">
 	<p><h3 class="text-center">Players</h3></p>
 	<div class="scrollable border-above border-left border-below">
+		<table>
 		{% for player in team.Players %}
-		<p id='player{{ player.id }}' class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a> <span class="glyphicon glyphicon-remove red" onclick="RemovePlayer(this, {{ player.id }})" aria-hidden="true"></span></p>
+		<tr>
+		<td width="94%">
+			<p id='player{{ player.id }}' class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a></p>
+		</td>
+		<td width="6%" align="left">
+			<div>
+			 <span class="glyphicon glyphicon-remove red" onclick="RemovePlayer(this, {{ player.id }})" aria-hidden="true"></span>
+			</div>
+		</td>
+		</tr>
 		{% endfor %}
+		</table>
 	</div>
 </div>
 <script>
