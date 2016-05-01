@@ -1,0 +1,84 @@
+body, html {
+  margin: 0;
+  height:50vh;
+  background-color: honeydew
+}
+
+.scrollable {
+	max-height: 86vh;
+	overflow-y: scroll;
+}
+
+.border-left {
+  border-left: 1px solid #333;
+}
+
+.border-right {
+  border-right: 1px solid #333;
+}
+
+.border-above {
+  border-top: 1px solid #333;
+}
+
+.border-below {
+  border-bottom: 1px solid #333;
+}
+
+.progress-bar-purple {
+      background-color: dodgerblue !important;
+}
+
+.progress-bar-orange {
+      background-color: mediumseagreen !important;
+}
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
+}
+
+.yellow {
+  color: yellow;
+}
+
+.blue {
+  color: blue;
+}
+
+.round-button {
+	width:25%;
+}
+.round-button-circle {
+	width: 100%;
+	height:0;
+	padding-bottom: 100%;
+    border-radius: 50%;
+	border:10px solid #414141;
+    overflow:hidden;
+
+    background: #333333;
+    box-shadow: 0 0 3px #414141;
+}
+.round-button-circle:hover {
+	background:#1a1a1a;
+}
+.round-button a {
+    display:block;
+	float:left;
+	width:100%;
+	padding-top:50%;
+    padding-bottom:50%;
+	line-height:1em;
+	margin-top:-0.5em;
+
+	text-align:center;
+	color:#e2eaf3;
+    font-family:Verdana;
+    font-size:1.2em;
+    font-weight:bold;
+    text-decoration:none;
+}

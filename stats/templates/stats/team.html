@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load stats_extras %}
+
+{% block title %}{{ team|get:'Team Name' }}'s Stats{% endblock %}
+
+{% block content %}
+<div class="col-md-10">
+	<h1 class="text-center">{{ team|get:'Team Name' }}</h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					Stat Name
+				</th>
+				<th>
+					{{ team|get:'Team Name' }}'s Stats
+				</th>
+				<th>
+					Average Stats
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for key, value in percent.items %}
+				{% if value|isnumber and key != 'id' and value >= 1%}
+					<tr>
+						<td>
+							<b>{{ key }}:</b>
+						</td>
+						<td>
+							{{ team|get:key }}
+						</td>
+						<td>
+							<div class="progress">
+								<div class="progress-bar {{ value|bartype }}" role="progressbar" aria-valuenow="{{ team|get:key }}" style="width:{{ percent|get:key }}%">
+									<!--{{ avg|get:key }}-->
+								</div>
+							</div>
+						</td>
+					</tr>
+				{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+<div class="col-md-2">
+	<p><h3 class="text-center">Players ({{ team.Players|length }})</h3></p>
+	<div class="scrollable border-above border-left border-below">
+		{% for player in team.Players %}
+		<p class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a></p>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}

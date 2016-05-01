@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load stats_extras %}
+
+{% block title %}{{ league|get:'League Name' }}{% endblock %}
+
+{% block content %}
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				Team Name
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for team in league.Teams %}
+			<tr>
+				<td>
+					<a href='/stats/teams/{{ team.id }}'>{{ team|get:'Team Name' }}</a>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

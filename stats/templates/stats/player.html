@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load stats_extras %}
+
+{% block title %}{{ player|get:'Name'|formatname }}'s Stats{% endblock %}
+
+{% block content %}
+<div class="col-md-10">
+	<h1 class="text-center">{{ player|get:'Name'|formatname }} <span class="{{ percent|avgcheck }}" aria-hidden="true"></span></h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					<button class="button" onclick="AddPlayer({{ player.id }})"><span class="glyphicon glyphicon-plus green" aria-hidden="true"></span></button>
+				</th>
+				<th>
+					{{ player|get:'Name'|formatname }}'s Stats
+				</th>
+				<th>
+					Standard Deviation for {{ player|get:'Position'|position }}
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for key, value in percent.items %}
+				{% if value|isnumber and key != 'id' and key != 'Number' and value >= 1 %}
+					<tr>
+						<td>
+							<b>{{ key }}:</b>
+						</td>
+						<td>
+							{{ player|get:key }}
+						</td>
+						<td>
+							<div class="progress">
+								<div class="progress-bar {{ value|bartype }}" role="progressbar" aria-valuenow="{{ player|get:key }}" style="width:{{ value }}%">
+									<!--{{ avg|get:key }}-->
+								</div>
+							</div>
+						</td>
+					</tr>
+				{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+<div class="col-md-2">
+	<p><h3 class="text-center">Similar Players ({{ similar|length }})</h3></p>
+	<div class="scrollable border-above border-left border-below">
+		{% for compplayer in similar %}
+		<p class="text-center"><a href='/stats/players/{{ player.id }}/compare/{{ compplayer.id }}'>{{ compplayer.Name }}</a></p>
+		{% endfor %}
+	</div>
+</div>
+<script>
+	function AddPlayer(playerid){
+		$.ajax({url: "/stats/teams/myteam/add/" + playerid + "/", success: function(result){
+			alert(result);
+		}, error: function(){
+			alert("Failed to contact server");
+		}});
+	}
+</script>
+{% endblock %}
