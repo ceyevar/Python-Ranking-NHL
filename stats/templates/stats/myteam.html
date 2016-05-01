@@ -52,9 +52,9 @@
 	<div class="scrollable border-above border-left border-below">
 		<table>
 		{% for player in team.Players %}
-		<tr>
+		<tr id='player{{ player.id }}'>
 		<td width="94%">
-			<p id='player{{ player.id }}' class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a></p>
+			<p class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a></p>
 		</td>
 		<td width="6%" align="left">
 			<div>

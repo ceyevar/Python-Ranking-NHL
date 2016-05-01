@@ -1,1 +1,0 @@
-[{"model": "polls.question", "pk": 1, "fields": {"question_text": "What's new?", "pub_date": "2016-04-20T03:05:14.705Z"}}, {"model": "polls.question", "pk": 2, "fields": {"question_text": "What's hanging?", "pub_date": "2016-04-20T06:00:34.545Z"}}, {"model": "polls.question", "pk": 3, "fields": {"question_text": "What's harring?", "pub_date": "2016-05-20T06:00:34.545Z"}}]
