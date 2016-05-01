@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load stats_extras %}
 
 {% block title %}My Team's Stats{% endblock %}
 
 {% block content %}
 <div id="Stats" class="col-md-10">
-	<h1 class="text-center">My Team</h1>
+	<teamname>My Team</teamname>
 	{% if team.Players|length > 10 %}
 	<table class="table">
 		<thead>
@@ -44,7 +45,10 @@
 		</tbody>
 	</table>
 	{% else %}
-	<div class="text-center">Please add more players to team to see statistics</div>
+	<div class="text-center">
+		<div style="font-family: 'Architects Daughter', cursive; font-size: 2.5em">Please add more players to construct team and see statistics</div>
+		<emptyteam><!-- http://www.drawingtutorials101.com/drawing-tutorials/Sports/Other-Sports/ice-hockey-player/how-to-draw-Ice-Hockey-Player-step-10.png --></emptyteam>
+	</div>
 	{% endif %}
 </div>
 <div class="col-md-2">
@@ -53,10 +57,10 @@
 		<table>
 		{% for player in team.Players %}
 		<tr id='player{{ player.id }}'>
-		<td width="94%">
-			<p class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a></p>
+		<td width="95%">
+			<playerlistname class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a></playerlistname>
 		</td>
-		<td width="6%" align="left">
+		<td width="5%" align="left">
 			<div>
 			 <span class="glyphicon glyphicon-remove red" onclick="RemovePlayer(this, {{ player.id }})" aria-hidden="true"></span>
 			</div>

@@ -4,7 +4,11 @@
 {% block title %}{{ player1|get:'Name'|formatname }} vs. {{ player2|get:'Name'|formatname }}{% endblock %}
 
 {% block content %}
-<h1 class="text-center">{{ player1|get:'Name'|formatname }} vs. {{ player2|get:'Name'|formatname }}</h1>
+<div class="text-center">
+	<playername style="display: inline">{{ player1|get:'Name'|formatname }} </playername>
+	<span style="font-family: 'Architects Daughter', cursive; font-size: 3.75em"> vs. </span>
+	<playername style="display: inline">{{ player2|get:'Name'|formatname }}</playername>
+</div>
 <table class="table">
 	<thead>
 		<tr>

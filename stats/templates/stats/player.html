@@ -5,12 +5,13 @@
 
 {% block content %}
 <div class="col-md-10">
-	<h1 class="text-center">{{ player|get:'Name'|formatname }} <span class="{{ percent|avgcheck }}" aria-hidden="true"></span></h1>
+	<playername><span class="{{ percent|avgcheck }}" aria-hidden="true"></span> {{ player|get:'Name'|formatname }} #{{ player|get:'Number' }}</playername>
 	<table class="table">
 		<thead>
 			<tr>
 				<th>
 					<button class="button" onclick="AddPlayer({{ player.id }})"><span class="glyphicon glyphicon-plus green" aria-hidden="true"></span></button>
+					Add Player to My Team
 				</th>
 				<th>
 					{{ player|get:'Name'|formatname }}'s Stats
@@ -47,7 +48,7 @@
 	<p><h3 class="text-center">Similar Players ({{ similar|length }})</h3></p>
 	<div class="scrollable border-above border-left border-below">
 		{% for compplayer in similar %}
-		<p class="text-center"><a href='/stats/players/{{ player.id }}/compare/{{ compplayer.id }}'>{{ compplayer.Name }}</a></p>
+		<playerlistname class="text-center"><a href='/stats/players/{{ player.id }}/compare/{{ compplayer.id }}'>{{ compplayer.Name }}</a></playerlistname>
 		{% endfor %}
 	</div>
 </div>

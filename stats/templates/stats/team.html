@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="col-md-10">
-	<h1 class="text-center">{{ team|get:'Team Name' }}</h1>
+	<teamname>{{ team|get:'Team Name' }}</teamname>
 	<table class="table">
 		<thead>
 			<tr>
@@ -47,7 +47,7 @@
 	<p><h3 class="text-center">Players ({{ team.Players|length }})</h3></p>
 	<div class="scrollable border-above border-left border-below">
 		{% for player in team.Players %}
-		<p class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a></p>
+		<playerlistname class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }} #{{ player.Number }}</a></playerlistname>
 		{% endfor %}
 	</div>
 </div>

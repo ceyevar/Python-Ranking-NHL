@@ -29,12 +29,12 @@ C = clustering.cluster(All_Players, 20, int(len(All_Players) * 0.047))
 
 T = { 'Players': [] }
 
-# ids = [1121, 997, 999, 2165, 1555, 1642, 2689, 1015, 1189, 1991, 2003, 1865, 2351, 2211, 1265, 1488, 2121]
-# for league in D["Leagues"]:
-#     for team in league["Teams"]:
-#         for player in team["Players"]:
-#             if player["id"] in ids:
-#                 T['Players'].append(player)
+ids = [1121, 997, 999, 2165, 1555, 1642, 2689, 1015, 1189, 1991, 2003, 1865, 2351, 2211, 1265, 1488, 2121]
+for league in D["Leagues"]:
+    for team in league["Teams"]:
+        for player in team["Players"]:
+            if player["id"] in ids:
+                T['Players'].append(player)
 
 ###################
 # Routes

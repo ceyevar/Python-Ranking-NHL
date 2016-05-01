@@ -4,6 +4,33 @@ body, html {
   background-color: honeydew
 }
 
+playername {
+  display: block;
+  font-family: 'Jockey One', sans-serif;
+  font-size: 3.75em;
+  text-align: center;
+}
+
+playerlistname {
+  font-family: 'Architects Daughter', cursive;
+  display: block;
+  font-size: 1.5em;
+}
+
+teamname {
+  display: block;
+  font-family: 'Bangers', cursive;
+  font-size: 3.75em;
+  text-align: center;
+}
+
+emptyteam {
+  display: block;
+  background: url("/static/stats/images/builder.png") no-repeat center;
+  height: 79vh;
+  width: 100%; /* may not be necessary */
+}
+
 .scrollable {
 	max-height: 86vh;
 	overflow-y: scroll;
