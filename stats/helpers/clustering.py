@@ -4,11 +4,10 @@ import json, numbers, math, random, numpy, operator
 # Global value for all stat names that are present in every player
 stats = []
 
-
 # Main function
-def cluster(P, I, K):
+def cluster(P, I, K, ignored = []):
 
-	collect_stat_names(P)
+	collect_stat_names(P, ignored)
 
 	# Get random seeds
 	seeds = random_seeds(P, K)
@@ -71,13 +70,14 @@ def calculate_new_seeds(clusters, players):
 
 
 # Finds all stat names that are present in every player
-def collect_stat_names(players):
+def collect_stat_names(players, ignored):
 	names = {}
 	for player in players:
 		for k,v in player.iteritems():
-			if k not in names:
-				names[k] = 0
-			names[k] += 1
+			if k not in ignored:
+				if k not in names:
+					names[k] = 0
+				names[k] += 1
 	for k,v in names.iteritems():
 		if v == len(players) and isinstance(players[0][k], numbers.Number) and k != 'id' and k != 'Number':
 			stats.append(k)

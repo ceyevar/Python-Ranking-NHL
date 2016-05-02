@@ -58,6 +58,20 @@ def comparisoncolors(player1, player2):
 
 
 @register.filter()
+def rankcolors(player1, player2):
+	if not isinstance(player1, numbers.Number):
+		player1 = float('inf')
+	if not isinstance(player2, numbers.Number):
+		player2 = float('inf')
+	if player1 < player2:
+		return 'glyphicon glyphicon-triangle-top green'
+	elif player1 > player2:
+		return 'glyphicon glyphicon-triangle-bottom red'
+	else:
+		return 'glyphicon glyphicon-minus yellow'
+
+
+@register.filter()
 def comparisonlength(player1, player2):
 	try:
 		length = float(player1) / (float(player1) + float(player2)) * 100
@@ -69,7 +83,6 @@ def comparisonlength(player1, player2):
 		elif length < 1:
 			length = 1
 		return length
-
 
 @register.filter()
 def position(pos):
@@ -106,3 +119,13 @@ def get_all_data():
 	json_data = f.read()
 	f.close()
 	return json.loads(json_data)
+
+
+@register.filter()
+def relevant(key):
+	return(key not in ['id', 'Number', 'Draft Year'])
+
+
+@register.filter()
+def getrank(player):
+	return player.get('Rank', 0)

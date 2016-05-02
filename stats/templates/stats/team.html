@@ -16,13 +16,13 @@
 					{{ team|get:'Team Name' }}'s Stats
 				</th>
 				<th>
-					Average Stats
+					Standard Deviation Teams
 				</th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for key, value in percent.items %}
-				{% if value|isnumber and key != 'id' and value >= 1%}
+				{% if value|isnumber and key|relevant and value >= 1%}
 					<tr>
 						<td>
 							<b>{{ key }}:</b>
@@ -32,8 +32,7 @@
 						</td>
 						<td>
 							<div class="progress">
-								<div class="progress-bar {{ value|bartype }}" role="progressbar" aria-valuenow="{{ team|get:key }}" style="width:{{ percent|get:key }}%">
-									<!--{{ avg|get:key }}-->
+								<div class="progress-bar {{ value|bartype }}" role="progressbar" aria-valuenow="{{ team|get:key }}" style="width:{{ value }}%">
 								</div>
 							</div>
 						</td>
@@ -47,7 +46,7 @@
 	<p><h3 class="text-center">Players ({{ team.Players|length }})</h3></p>
 	<div class="scrollable border-above border-left border-below">
 		{% for player in team.Players %}
-		<playerlistname class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }} #{{ player.Number }}</a></playerlistname>
+		<playerlistname class="text-center"><a href='/stats/players/{{ player.id }}'>{{ player.Name }}</a></playerlistname>
 		{% endfor %}
 	</div>
 </div>

@@ -5,7 +5,18 @@
 
 {% block content %}
 <div class="col-md-10">
-	<playername><span class="{{ percent|avgcheck }}" aria-hidden="true"></span> {{ player|get:'Name'|formatname }} #{{ player|get:'Number' }}</playername>
+	<div class='text-center'>
+	<playername style="display: inline">{{ player|get:'Name'|formatname }}</playername>
+	<span style="font-family: 'Architects Daughter', cursive; font-size: 3.75em">
+	<sup>
+	{% if 'Rank' in player %}
+		#{{ player|get:'Rank' }}
+	{% else %}
+		(unranked)
+	{% endif %}
+	</sup>
+	</span>
+	</div>
 	<table class="table">
 		<thead>
 			<tr>
@@ -23,7 +34,7 @@
 		</thead>
 		<tbody>
 			{% for key, value in percent.items %}
-				{% if value|isnumber and key != 'id' and key != 'Number' and value >= 1 %}
+				{% if value|isnumber and key|relevant and value >= 1 %}
 					<tr>
 						<td>
 							<b>{{ key }}:</b>
@@ -34,7 +45,6 @@
 						<td>
 							<div class="progress">
 								<div class="progress-bar {{ value|bartype }}" role="progressbar" aria-valuenow="{{ player|get:key }}" style="width:{{ value }}%">
-									<!--{{ avg|get:key }}-->
 								</div>
 							</div>
 						</td>

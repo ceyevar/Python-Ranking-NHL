@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 import numbers, decimal, json, operator, math
-from helpers import clustering
+from helpers import clustering, ranking, helpers
 
 
 ###################
@@ -12,29 +12,29 @@ f = open('./stats.json', 'r')
 json_data = f.read()
 f.close()
 
+# All league, team, and player data
 D = json.loads(json_data)
 
-def get_all_players():
-    Players = []
-    for league in D['Leagues']:
-        if league['League Name'] != 'AHL':
-            for team in league['Teams']:
-                for player in team['Players']:
-                    Players.append(player)
-    return Players
+# Ignored 'stats' for players
+Ignored = ['id', 'Number', 'Draft Year', 'Rank']
 
-All_Players = get_all_players()
+# List of all clusters and their players
+C = clustering.cluster(helpers.get_all_players(D), 20, 7*3, Ignored)
 
-C = clustering.cluster(All_Players, 20, int(len(All_Players) * 0.047))
+# Rankings of draft eligible players
+# Stat names and weights to collect in ranking algorithm
+stats = [{ 'name': 'ES Primary Points/GP', 'weight': 1}, { 'name': 'ES GF%Rel', 'weight': 0.5}, { 'name': 'ES GA', 'weight': 0.25}]
+# Player ids in ranking order
+Rankings = ranking.rank(helpers.get_draft_elig_players(D), stats, len(helpers.get_draft_elig_players(D)))
+# Write rankings to data file
+helpers.write_rankings(D, Rankings)
 
+# List of all players in MyTeam
+# TODO: store in local cache later
 T = { 'Players': [] }
 
-ids = [1121, 997, 999, 2165, 1555, 1642, 2689, 1015, 1189, 1991, 2003, 1865, 2351, 2211, 1265, 1488, 2121]
-for league in D["Leagues"]:
-    for team in league["Teams"]:
-        for player in team["Players"]:
-            if player["id"] in ids:
-                T['Players'].append(player)
+# Used to prepopulate MyTeam for easy demoing
+T['Players'] = helpers.populate_myteam(D)
 
 ###################
 # Routes
@@ -60,31 +60,31 @@ def player(request, player_id):
         for team in league["Teams"]:
             for player in team["Players"]:
                 if player["id"] == int(player_id):
-                    Players = collect_players(player['Position'])
+                    Players = helpers.collect_players(D, player['Position'])
                     for k,v in C.iteritems():
                         if player in v:
                             similar_players = v
-                    avg = avg_stats(Players)
-                    var = variance(Players, avg)
-                    dev = deviation(var)
-                    player_dev = individual_deviation(player, dev, avg)
-                    maxmin = maxmin_stats(Players)
-                    return render(request, 'stats/player.html', {'player' : player, 'avg': avg, 'percent': player_dev, 'similar': similar_players })
-    raise Http404("League does not exist...")
+                    avg = helpers.avg_stats(Players, Ignored)
+                    var = helpers.variance(Players, avg)
+                    dev = helpers.deviation(var)
+                    player_dev = helpers.individual_deviation(player, dev, avg)
+                    maxmin = helpers.maxmin_stats(Players)
+                    return render(request, 'stats/player.html', {'player' : player, 'percent': player_dev, 'similar': similar_players })
+    raise Http404("Player does not exist...")
 
 
 def team(request, team_id):
     for league in D["Leagues"]:
         for team in league["Teams"]:
             if team["id"] == int(team_id):
-                Teams = get_all_teams()
-                avg = avg_stats(Teams)
-                var = variance(Teams, avg)
-                dev = deviation(var)
-                team_dev = individual_deviation(team, dev, avg)
-                maxmin = maxmin_stats(Teams)
-                percent = percentages(team, maxmin['max'], maxmin['min'])
-                return render(request, 'stats/team.html', {'team' : team, 'avg': avg, 'percent': team_dev})
+                Teams = helpers.get_all_teams(D)
+                avg = helpers.avg_stats(Teams, Ignored)
+                var = helpers.variance(Teams, avg)
+                dev = helpers.deviation(var)
+                team_dev = helpers.individual_deviation(team, dev, avg)
+                maxmin = helpers.maxmin_stats(Teams)
+                percent = helpers.percentages(team, maxmin['max'], maxmin['min'])
+                return render(request, 'stats/team.html', {'team' : team, 'percent': team_dev})
     raise Http404("Team does not exist...")
 
 
@@ -113,7 +113,7 @@ def team_builder(request):
     myk = {}
     for player in T['Players']:
          for k,v in player.iteritems():
-            if isinstance(v, numbers.Number) and k != 'id' and k != 'Number':
+            if isinstance(v, numbers.Number) and k not in Ignored:
                 if k not in myavg:
                     myk[k] = 0
                     myavg[k] = 0
@@ -130,7 +130,7 @@ def team_builder(request):
                 tkdata = {}
                 for player in team['Players']:
                     for k,v in player.iteritems():
-                        if isinstance(v, numbers.Number) and k != 'id' and k != 'Number':
+                        if isinstance(v, numbers.Number) and k not in Ignored:
                             if k not in tdata:
                                 tkdata[k] = 0
                                 tdata[k] = 0
@@ -152,9 +152,9 @@ def team_builder(request):
     for k,v in avgs.iteritems():
             avgs[k] = v/kdata[k]
 
-    var = variance(teamavgs.values(), avgs)
-    dev = deviation(var)
-    team_dev = individual_deviation(myavg, dev, avgs)
+    var = helpers.variance(teamavgs.values(), avgs)
+    dev = helpers.deviation(var)
+    team_dev = helpers.individual_deviation(myavg, dev, avgs)
 
     if request.is_ajax():
         return render(request, 'stats/_myteam.html', { 'team': T, 'myavg': myavg, 'avgs': avgs, 'percent': team_dev })
@@ -179,110 +179,3 @@ def remove_player(request, playerid):
             T['Players'].remove(player);
             return HttpResponse('Successfully removed player from team!')
     return HttpResponse('Player not found.')
-
-
-##################
-# Helper Functions
-##################
-
-def avg_stats(data):
-    avg = {}
-    for item in data:
-        for k, v in item.iteritems():
-            if k in avg:
-                if isinstance(v, numbers.Number):
-                    avg[k] += v
-            else:
-                if isinstance(v, numbers.Number):
-                    avg[k] = v
-    for k, v in avg.iteritems():
-        avg[k] = v/len(data)
-    return avg
-
-
-def variance(data, avg):
-    var = {}
-    for k,v in avg.iteritems():
-        for item in data:
-            if k in item:
-                if k not in var:
-                    var[k] = 0
-                var[k] += (item[k] - v) ** 2
-        if k in var:
-            var[k] = var[k]/len(data)
-    return var
-
-
-def deviation(var):
-    dev = {}
-    for k,v in var.iteritems():
-        dev[k] = math.sqrt(v)
-    return dev
-
-
-def individual_deviation(data, dev, avg):
-    pd = {}
-    for k,v in dev.iteritems():
-        if k in data:
-            numerator = (float(data[k]) - float(avg[k] - v))
-            denominator = (float(avg[k] + v) - float(avg[k] - v))
-            try:
-                pd[k] = ((numerator/denominator) * 100)
-            except:
-                pd[k] = 50
-            else:
-                if pd[k] == 0:
-                    pd[k] = 1
-    return pd
-
-
-def maxmin_stats(data):
-    max = {}
-    min = {}
-    for item in data:
-        for k,v in item.iteritems():
-            if k in max and k in min:
-                if isinstance(v, numbers.Number):
-                    if max[k] < v:
-                        max[k] = v
-                    if min[k] > v:
-                        min[k] = v
-            else:
-                if isinstance(v, numbers.Number):
-                    max[k] = v
-                    min[k] = v
-    return { 'max': max, 'min': min }
-
-
-def percentages(data, max, min):
-    result = {}
-    for k,v in data.iteritems():
-        if isinstance(v, numbers.Number):
-            numerator = (float(v) - float(min[k]))
-            denominator = (float(max[k]) - float(min[k]))
-            try:
-                result[k] = ((numerator/denominator) * 100)
-            except:
-                result[k] = 100
-    return result
-
-
-def collect_players(position):
-    data = {}
-    data['Players'] = []
-    for league in D['Leagues']:
-        if league['League Name'] != 'AHL':
-            for team in league['Teams']:
-                for player in team['Players']:
-                    if player['Position'] == position:
-                        data['Players'].append(player)
-    return data['Players']
-
-
-def get_all_teams():
-    Teams = []
-    for league in D['Leagues']:
-        if league['League Name'] != 'AHL':
-            for team in league['Teams']:
-                Teams.append(team)
-    return Teams

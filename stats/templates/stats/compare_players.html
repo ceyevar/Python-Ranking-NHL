@@ -1,13 +1,32 @@
 {% extends "base.html" %}
 {% load stats_extras %}
+{% load staticfiles %}
 
 {% block title %}{{ player1|get:'Name'|formatname }} vs. {{ player2|get:'Name'|formatname }}{% endblock %}
 
 {% block content %}
 <div class="text-center">
 	<playername style="display: inline">{{ player1|get:'Name'|formatname }} </playername>
+	<span style="font-family: 'Architects Daughter', cursive; font-size: 3.75em">
+	<sup>
+	{% if 'Rank' in player1 %}
+		#{{ player1|get:'Rank' }}
+	{% else %}
+		(unranked)
+	{% endif %}
+	</sup>
+	</span>
 	<span style="font-family: 'Architects Daughter', cursive; font-size: 3.75em"> vs. </span>
-	<playername style="display: inline">{{ player2|get:'Name'|formatname }}</playername>
+	<playername style="display: inline">{{ player2|get:'Name'|formatname }} </playername>
+	<span style="font-family: 'Architects Daughter', cursive; font-size: 3.75em">
+	<sup>
+	{% if 'Rank' in player2 %}
+		#{{ player2|get:'Rank' }}
+	{% else %}
+		(unranked)
+	{% endif %}
+	</sup>
+	</span>
 </div>
 <table class="table">
 	<thead>
@@ -28,7 +47,7 @@
 	</thead>
 	<tbody>
 		{% for key, value in player1.items %}
-			{% if value|isnumber and key != 'id' and player2|get:key|isnumber %}
+			{% if value|isnumber and key|relevant and player2|get:key|isnumber %}
 			{% with value1=player1|get:key value2=player2|get:key %}
 				<tr>
 					<td width="35%">
