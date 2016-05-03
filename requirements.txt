@@ -6,4 +6,3 @@ numpy==1.11.0
 requests==2.9.1
 whitenoise==3.0
 psycopg2==2.5.4
-./stats/helpers
