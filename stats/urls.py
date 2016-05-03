@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^players/(?P<player_id>[0-9]+)/$', views.player, name='player stats'),
     url(r'^players/(?P<player1_id>[0-9]+)/compare/(?P<player2_id>[0-9]+)/$', views.compare_players, name='compare players'),
     url(r'^teams/myteam/$', views.team_builder, name='team stats'),
-    url(r'^teams/rankings/$', views.rankings, name='team stats'),
+	url(r'^teams/rankings/(?P<sort>[\w\-]+)/$', views.rankings, name='team stats'),
     url(r'^teams/myteam/add/(?P<playerid>[0-9]+)/$', views.add_player, name='team stats'),
     url(r'^teams/myteam/remove/(?P<playerid>[0-9]+)/$', views.remove_player, name='team stats'),
 ]

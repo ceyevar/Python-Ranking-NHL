@@ -23,7 +23,7 @@ C = clustering.cluster(helpers.get_all_players(D), 20, 7*3, Ignored)
 
 # Rankings of draft eligible players
 # Stat names and weights to collect in ranking algorithm
-stats = [{ 'name': 'ES Primary Points/GP', 'weight': 1}, { 'name': 'ES GF%Rel', 'weight': 0.5}, { 'name': 'ES GA', 'weight': 0.25}]
+stats = [{ 'name': 'ES Primary Points/GP', 'weight': .5}, { 'name': 'ES GF%Rel', 'weight': 0.25}, { 'name': 'ES GA', 'weight': 0.25}]
 # Player ids in ranking order
 Rankings = ranking.rank(helpers.get_draft_elig_players(D), stats, len(helpers.get_draft_elig_players(D)))
 Rankings_full = ranking.rank_full_players(helpers.get_draft_elig_players(D), stats, len(helpers.get_draft_elig_players(D)))
@@ -48,8 +48,8 @@ def index(request):
 def all(request):
     return HttpResponse(json.dumps(D))
 	
-def rankings(request):
-	return render(request, 'stats/rankings.html', {'rankings' : Rankings_full, 'players': helpers.get_all_players(D)})
+def rankings(request, sort):
+	return render(request, 'stats/rankings.html', {'rankings' : Rankings_full, 'players': helpers.get_all_players(D), 'sort': sort})
 def league(request, league_name):
     for league in D["Leagues"]:
         if league["League Name"] == league_name:
@@ -71,7 +71,7 @@ def player(request, player_id):
                     dev = helpers.deviation(var)
                     player_dev = helpers.individual_deviation(player, dev, avg)
                     maxmin = helpers.maxmin_stats(Players)
-                    return render(request, 'stats/player.html', {'player' : player, 'percent': player_dev, 'similar': similar_players })
+                    return render(request, 'stats/player.html', {'player' : player, 'percent': player_dev, 'similar': similar_players})
     raise Http404("Player does not exist...")
 
 

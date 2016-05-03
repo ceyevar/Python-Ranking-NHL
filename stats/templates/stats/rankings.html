@@ -7,17 +7,42 @@
 
 <div class="col-md-10">
 	<div class='text-center'>
-	<playername style="display: inline">2016 DRAFT RANKINGS</playername>
+	<playername style="display: inline">Simulated 2016 Draft Rankings</playername>
 	<span style="font-family: 'Architects Daughter', cursive; font-size: 3.75em">
 <div>
 
 <div class="container">
   <div class="list-group">
   {% for key, value in rankings %}
-    <a href="/stats/players/{{key}}" class="list-group-item">
-      <p class="list-group-item-heading">{{value.1}}</p>
-      <h4 class="list-group-item-text">{{value.2}}</h4>
-    </a>
+	{% if sort == 'all' %}
+		<a href="/stats/players/{{key}}" class="list-group-item">
+			<p class="list-group-item-heading">{{forloop.counter}}. {{value.1}}</p>
+			<h4 class="list-group-item-text">{{value.2}}</h4>
+			<h4 class="list-group-item-text">{{value.3}}</h4>
+		</a>		
+	{%endif%}
+	{% if sort == 'LWRW' %}
+		{% if value.3 == 'LW' %}
+			<a href="/stats/players/{{key}}" class="list-group-item">
+			  <p class="list-group-item-heading">{{forloop.counter}}. {{value.1}}</p>
+			  <h4 class="list-group-item-text">{{value.2}}</h4>
+			  <h4 class="list-group-item-text">{{value.3}}</h4>
+			</a>	
+		{% elif value.3 = 'RW' %}
+		<a href="/stats/players/{{key}}" class="list-group-item">
+		  <p class="list-group-item-heading">{{forloop.counter}}. {{value.1}}</p>
+		  <h4 class="list-group-item-text">{{value.2}}</h4>
+		  <h4 class="list-group-item-text">{{value.3}}</h4>
+		</a>
+		{% endif %}
+	{% endif %}
+	{%if sort == value.3%}
+		<a href="/stats/players/{{key}}" class="list-group-item">
+		  <p class="list-group-item-heading">{{forloop.counter}}. {{value.1}}</p>
+		  <h4 class="list-group-item-text">{{value.2}}</h4>
+		  <h4 class="list-group-item-text">{{value.3}}</h4>
+		</a>
+	{%endif %}
 	{% endfor %}
 	<div>
 </div>

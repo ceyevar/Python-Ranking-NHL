@@ -50,13 +50,14 @@ def rank_full_players(players, stats, length):
 					val = (float(player[stat['name']])-float(stats_n[stat['name']][0]))/(float(stats_n[stat['name']][1])-float(stats_n[stat['name']][0]))
 					val = val/ find_avg_of_stat(stat['name'], players)
 					stat_dict[stat['name']] = val
-			float_ranking = stat_dict['ES Primary Points/GP'] + 0.5 * stat_dict['ES GF%Rel'] + 0.25 * stat_dict['ES GA']
+			float_ranking = stat_dict['ES Primary Points/GP'] * 0.5 + 0.25 * stat_dict['ES GF%Rel'] + 0.25 * stat_dict['ES GA']
 			player_dict[player['id']] = []
 			for stat in stats:
 				float_ranking += (stat_dict[stat['name']] * stat['weight'])
 			player_dict[player['id']].append(float_ranking)			
 			player_dict[player['id']].append(str(player['Name']))
 			player_dict[player['id']].append(str(player['Team']))
+			player_dict[player['id']].append(str(player['Position']))
 	od = OrderedDict(sorted(player_dict.items(),key=lambda (k, v): v[0]))
 	player_dict_ordered = OrderedDict(reversed(list(od.items())))
 
