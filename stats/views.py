@@ -55,8 +55,8 @@ def league(request, league_name):
         if league["League Name"] == league_name:
             return render(request, 'stats/league.html', {'league' : league})
     raise Http404("League does not exist...")
-
-
+def glossary(request):
+	return render(request, 'stats/glossary.html')
 def player(request, player_id):
     for league in D["Leagues"]:
         for team in league["Teams"]:

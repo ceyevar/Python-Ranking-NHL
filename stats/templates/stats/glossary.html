@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load stats_extras %}
+
+{% block title %}Term Glossary and Explanation{% endblock %}
+
+{% block content %}
+
+<div class="col-md-10">
+	<div class='text-center'>
+	<playername style="display: inline">Term Glossary and Explanation</playername>
+	<span style="font-family: 'Architects Daughter', cursive; font-size: 3.75em">
+<div>
+
+<div class="container">
+  <div class="list-group">
+  		<a class="list-group-item">
+		  <p class="list-group-item-heading">GP</p>
+		  <h4 class="list-group-item-text">Games Played</h4>
+		</a>
+		<a class="list-group-item">
+		  <p class="list-group-item-heading">PIM</p>
+		  <h4 class="list-group-item-text">Penalty Minutes</h4>
+		  <h4 class="list-group-item-text">Denotes time the player has spent in the penalty box</h4>
+		</a>
+		<a class="list-group-item">
+		  <p class="list-group-item-heading">PP and ES</p>
+		  <h4 class="list-group-item-text">Powerplay and Even Strength Designations</h4>
+		  <h4 class="list-group-item-text">Powerplay stat categories denote stats accumulated while on the powerplay (which is when 
+		  a team plays a man up). This is generally less valuable as an evaluation statistic because not all teams are given the same 
+		  amount of powerplay time and not all players are given powerplay time.</h4>
+		</a>
+		<a class="list-group-item">
+		  <p class="list-group-item-heading">1A</p>
+		  <h4 class="list-group-item-text">Primary Assist</h4>
+		  <h4 class="list-group-item-text">In hockey, assists are credited to the direct passer and the player who passed to the direct passer.
+		  Primary assists are therefore the assists that result directly in a goal.</h4>
+		</a>
+		<a class="list-group-item">
+		  <p class="list-group-item-heading">2A</p>
+		  <h4 class="list-group-item-text">Secondary Assist</h4>
+		  <h4 class="list-group-item-text">In hockey, assists are credited to the direct passer and the player who passed to the direct passer.
+		  Secondary assists are therefore the assists that result in a pass that results in a goal. Secondary assists are disregarded in our algorithm
+		  because they contain little statistical value.</h4>
+		</a>
+		<a class="list-group-item">
+		  <p class="list-group-item-heading">Goals Created</p>
+		  <h4 class="list-group-item-text">Compares a player's offensive contribution to his team</h4>
+		  <h4 class="list-group-item-text">Calculated by adding goals scored to 0.5 times assists, then multiplying by team goals divided by team goals plus 0.5 times team assists.</h4>
+		</a>
+		<a class="list-group-item">
+		  <p class="list-group-item-heading">Shooting Percentage</p>
+		  <h4 class="list-group-item-text">Goals scored/Shots taken</h4>
+		  <h4 class="list-group-item-text">Any shooting percentage over the league norm is generally considering to be an indication of luck because goals themselves are low percentage events. 
+		  Having a high shooting percentage can indicate a "sniper" player or someone who is riding a hot streak.</h4>
+		</a>
+		</a>
+		<a class="list-group-item">
+		  <p class="list-group-item-heading">PDO</p>
+		  <h4 class="list-group-item-text">Measures a team's perceived luck</h4>
+		  <h4 class="list-group-item-text">Is the sum of a team's save percentage and shooting percentage. Anything above 100 indicates a team is "lucky" and anything below 100 indicates a
+		  a team is "unlucky". Overtime all teams regress to the mean (100).</h4>
+		</a>
+		<a class="list-group-item">
+		  <p class="list-group-item-heading">SV%</p>
+		  <h4 class="list-group-item-text">Save percentage</h4>
+		  <h4 class="list-group-item-text">Goals scored divided by shots taken</h4>
+		</a>
+		<a class="list-group-item">
+		  <p class="list-group-item-heading">SF, SA and SF%</p>
+		  <h4 class="list-group-item-text">Shots for, Shots Against, and Shots For Percentage</h4>
+		  <h4 class="list-group-item-text">SF% is 100*SF/(SF+SA) </h4>
+		</a>
+	<div>
+</div>
+{% endblock %}
