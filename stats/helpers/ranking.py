@@ -31,7 +31,41 @@ def rank(players, stats, length):
 	for player in rakings:
 		results.append(player[0])
 	return results
+	
+def rank_full_players(players, stats, length):
+	player_dict = {}
+	stats_n = {}
 
+	for stat_num in stats:
+		min_max_vals = normalize(stat_num, players)
+		stats_n[stat_num['name']] = min_max_vals
+
+
+	for player in players:
+		if(int(player['GP']) > 40 and int(player['Draft Year']) == 2016):
+			player_dict[player['id']] = 0
+			ret_list = []
+			stat_dict = {}
+			for stat in stats:
+					val = (float(player[stat['name']])-float(stats_n[stat['name']][0]))/(float(stats_n[stat['name']][1])-float(stats_n[stat['name']][0]))
+					val = val/ find_avg_of_stat(stat['name'], players)
+					stat_dict[stat['name']] = val
+			float_ranking = stat_dict['ES Primary Points/GP'] + 0.5 * stat_dict['ES GF%Rel'] + 0.25 * stat_dict['ES GA']
+			player_dict[player['id']] = []
+			for stat in stats:
+				float_ranking += (stat_dict[stat['name']] * stat['weight'])
+			player_dict[player['id']].append(float_ranking)			
+			player_dict[player['id']].append(str(player['Name']))
+			player_dict[player['id']].append(str(player['Team']))
+	od = OrderedDict(sorted(player_dict.items(),key=lambda (k, v): v[0]))
+	player_dict_ordered = OrderedDict(reversed(list(od.items())))
+
+	rakings = list(islice(player_dict_ordered.iteritems(), 0, length))
+	results = []
+	for player in rakings:
+		results.append(player)
+	return results
+	
 def normalize(stat, players):
 	min = 0
 	max = 0

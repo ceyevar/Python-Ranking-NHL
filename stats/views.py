@@ -26,6 +26,7 @@ C = clustering.cluster(helpers.get_all_players(D), 20, 7*3, Ignored)
 stats = [{ 'name': 'ES Primary Points/GP', 'weight': 1}, { 'name': 'ES GF%Rel', 'weight': 0.5}, { 'name': 'ES GA', 'weight': 0.25}]
 # Player ids in ranking order
 Rankings = ranking.rank(helpers.get_draft_elig_players(D), stats, len(helpers.get_draft_elig_players(D)))
+Rankings_full = ranking.rank_full_players(helpers.get_draft_elig_players(D), stats, len(helpers.get_draft_elig_players(D)))
 # Write rankings to data file
 helpers.write_rankings(D, Rankings)
 
@@ -46,8 +47,9 @@ def index(request):
 
 def all(request):
     return HttpResponse(json.dumps(D))
-
-
+	
+def rankings(request):
+	return render(request, 'stats/rankings.html', {'rankings' : Rankings_full, 'players': helpers.get_all_players(D)})
 def league(request, league_name):
     for league in D["Leagues"]:
         if league["League Name"] == league_name:

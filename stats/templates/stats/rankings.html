@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load stats_extras %}
+
+{% block title %}Rankings for 2016 Entry Draft{% endblock %}
+
+{% block content %}
+
+<div class="col-md-10">
+	<div class='text-center'>
+	<playername style="display: inline">2016 DRAFT RANKINGS</playername>
+	<span style="font-family: 'Architects Daughter', cursive; font-size: 3.75em">
+<div>
+
+<div class="container">
+  <div class="list-group">
+  {% for key, value in rankings %}
+    <a href="/stats/players/{{key}}" class="list-group-item">
+      <p class="list-group-item-heading">{{value.1}}</p>
+      <h4 class="list-group-item-text">{{value.2}}</h4>
+    </a>
+	{% endfor %}
+	<div>
+</div>
+{% endblock %}
+

@@ -3,9 +3,9 @@ import json, numbers, math, random, numpy, operator
 
 # Global value for all stat names that are present in every player
 stats = []
-
+ignore_these = ['GP', '+/-', 'Face-offs Taken', 'Age', 'Weight']
 # Main function
-def cluster(P, I, K, ignored = []):
+def cluster(P, I, K, ignored):
 
 	collect_stat_names(P, ignored)
 
@@ -70,6 +70,7 @@ def calculate_new_seeds(clusters, players):
 
 
 # Finds all stat names that are present in every player
+#I edited this only to include relevant stats, removed stats like weight and height
 def collect_stat_names(players, ignored):
 	names = {}
 	for player in players:
@@ -104,7 +105,7 @@ if __name__ == '__main__':
 			for player in team['Players']:
 				Players.append(player)
 
-	C = cluster(Players, 10, 6)
+	C = cluster(Players, 10, 6, ignore_these)
 
 	# Printing to screen
 	for k,v in C.iteritems():
