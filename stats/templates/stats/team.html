@@ -22,6 +22,7 @@
 		</thead>
 		<tbody>
 			{% for key, value in percent.items %}
+				{% if value|isnumber and key|relevant and value >= 1%}
 					<tr>
 						<td>
 							<b>{{ key }}:</b>
@@ -36,6 +37,7 @@
 							</div>
 						</td>
 					</tr>
+				{% endif %}
 			{% endfor %}
 		</tbody>
 	</table>
