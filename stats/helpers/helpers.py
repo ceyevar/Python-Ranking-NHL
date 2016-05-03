@@ -40,7 +40,7 @@ def avg_stats(data, ignored):
     avg = {}
     for item in data:
         for k, v in item.iteritems():
-            if k not in ignored:
+            if k in ignored:
                 if k in avg:
                     if isinstance(v, numbers.Number):
                         avg[k] += v

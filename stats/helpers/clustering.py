@@ -75,7 +75,7 @@ def collect_stat_names(players, ignored):
 	names = {}
 	for player in players:
 		for k,v in player.iteritems():
-			if k not in ignored:
+			if k in ignored:
 				if k not in names:
 					names[k] = 0
 				names[k] += 1

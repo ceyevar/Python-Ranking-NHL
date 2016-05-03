@@ -16,7 +16,7 @@ f.close()
 D = json.loads(json_data)
 
 # Ignored 'stats' for players
-Ignored = ['id', 'Number', 'Draft Year', 'Rank']
+Ignored = ['Goals Created/GP', 'Shooting Percentage', "ES % of Team's Goals Scored", 'Shots', 'PIM', 'ES Primary Points/GP', 'ES 1A/GP', 'ES 2A/GP', 'ES G/GP','PP Primary Points/GP', 'PP Points/GP', 'PP 1A/GP', 'PP 2A/GP', 'PP G/GP']
 
 # List of all clusters and their players
 C = clustering.cluster(helpers.get_all_players(D), 20, 7*3, Ignored)
@@ -71,23 +71,24 @@ def player(request, player_id):
                     dev = helpers.deviation(var)
                     player_dev = helpers.individual_deviation(player, dev, avg)
                     maxmin = helpers.maxmin_stats(Players)
-                    return render(request, 'stats/player.html', {'player' : player, 'percent': player_dev, 'similar': similar_players})
+                    return render(request, 'stats/player.html', {'player' : player, 'percent': player_dev, 'similar': similar_players, 'maxmin': maxmin})
     raise Http404("Player does not exist...")
 
 
 def team(request, team_id):
-    for league in D["Leagues"]:
-        for team in league["Teams"]:
-            if team["id"] == int(team_id):
-                Teams = helpers.get_all_teams(D)
-                avg = helpers.avg_stats(Teams, Ignored)
-                var = helpers.variance(Teams, avg)
-                dev = helpers.deviation(var)
-                team_dev = helpers.individual_deviation(team, dev, avg)
-                maxmin = helpers.maxmin_stats(Teams)
-                percent = helpers.percentages(team, maxmin['max'], maxmin['min'])
-                return render(request, 'stats/team.html', {'team' : team, 'percent': team_dev})
-    raise Http404("Team does not exist...")
+	ignore = ["SF%", "SA/GP", "SF/GP", "GF/GP","Sv%", "GA/GP", "SF", "PDO", "GF"]
+	for league in D["Leagues"]:
+		for team in league["Teams"]:
+			if team["id"] == int(team_id):
+				Teams = helpers.get_all_teams(D)
+				avg = helpers.avg_stats(Teams, ignore)
+				var = helpers.variance(Teams, avg)
+				dev = helpers.deviation(var)
+				team_dev = helpers.individual_deviation(team, dev, avg)
+				maxmin = helpers.maxmin_stats(Teams)
+				percent = helpers.percentages(team, maxmin['max'], maxmin['min'])
+				return render(request, 'stats/team.html', {'team' : team, 'percent': team_dev})
+	raise Http404("Team does not exist...")
 
 
 def compare_players(request, player1_id, player2_id):
@@ -115,7 +116,7 @@ def team_builder(request):
     myk = {}
     for player in T['Players']:
          for k,v in player.iteritems():
-            if isinstance(v, numbers.Number) and k not in Ignored:
+            if isinstance(v, numbers.Number) and k in Ignored:
                 if k not in myavg:
                     myk[k] = 0
                     myavg[k] = 0
@@ -132,7 +133,7 @@ def team_builder(request):
                 tkdata = {}
                 for player in team['Players']:
                     for k,v in player.iteritems():
-                        if isinstance(v, numbers.Number) and k not in Ignored:
+                        if isinstance(v, numbers.Number) and k in Ignored:
                             if k not in tdata:
                                 tkdata[k] = 0
                                 tdata[k] = 0
