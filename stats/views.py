@@ -16,7 +16,7 @@ f.close()
 D = json.loads(json_data)
 
 # Ignored 'stats' for players
-Ignored = ['Goals Created/GP', 'Shooting Percentage', "ES % of Team's Goals Scored", 'Shots', 'PIM', 'ES Primary Points/GP', 'ES 1A/GP', 'ES 2A/GP', 'ES G/GP','PP Primary Points/GP', 'PP Points/GP', 'PP 1A/GP', 'PP 2A/GP', 'PP G/GP']
+Ignored = ['G', '1A', '2A', 'Points', 'Goals Created/GP', 'Shooting Percentage', "ES % of Team's Goals Scored", 'Shots', 'PIM', 'ES Primary Points/GP', 'ES 1A/GP', 'ES 2A/GP', 'ES G/GP','PP Primary Points/GP', 'PP Points/GP', 'PP 1A/GP', 'PP 2A/GP', 'PP G/GP']
 
 # List of all clusters and their players
 C = clustering.cluster(helpers.get_all_players(D), 20, 7*3, Ignored)

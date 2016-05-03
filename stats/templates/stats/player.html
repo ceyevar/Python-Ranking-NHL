@@ -83,7 +83,9 @@
 	<p><h3 class="text-center">Similar Players ({{ similar|length }})</h3></p>
 	<div class="scrollable border-above border-left border-below">
 		{% for compplayer in similar %}
+		{%if compplayer.Position == player.Position %}
 		<playerlistname class="text-center"><a href='/stats/players/{{ player.id }}/compare/{{ compplayer.id }}'>{{ compplayer.Name }}</a></playerlistname>
+		{%endif%}
 		{% endfor %}
 	</div>
 </div>

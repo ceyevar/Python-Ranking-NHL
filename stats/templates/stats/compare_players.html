@@ -6,7 +6,7 @@
 
 {% block content %}
 <div class="text-center">
-	<playername style="display: inline">{{ player1|get:'Name'|formatname }} </playername>
+	<a href="/stats/players/{{ player1|get:'id'}}"><playername style="display: inline">{{ player1|get:'Name'|formatname }} </playername></a>
 	<span style="font-family: 'Architects Daughter', cursive; font-size: 3.75em">
 	<sup>
 	{% if 'Rank' in player1 %}
@@ -17,7 +17,7 @@
 	</sup>
 	</span>
 	<span style="font-family: 'Architects Daughter', cursive; font-size: 3.75em"> vs. </span>
-	<playername style="display: inline">{{ player2|get:'Name'|formatname }} </playername>
+	<a href="/stats/players/{{ player2|get:'id'}}"><playername style="display: inline">{{ player2|get:'Name'|formatname }} </playername></a>
 	<span style="font-family: 'Architects Daughter', cursive; font-size: 3.75em">
 	<sup>
 	{% if 'Rank' in player2 %}
