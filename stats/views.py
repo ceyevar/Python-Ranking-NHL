@@ -166,13 +166,15 @@ def team_builder(request):
 
 
 def add_player(request, playerid):
-    for player in All_Players:
-        if player['id'] == int(playerid):
-            if player not in T['Players']:
-                T['Players'].append(player)
-                return HttpResponse('Successfully added player to team!')
-            else:
-                return HttpResponse('Player already exists on team.')
+    for league in D["Leagues"]:
+        for team in league["Teams"]:
+            for player in team["Players"]:
+				if player['id'] == int(playerid):
+					if player not in T['Players']:
+						T['Players'].append(player)
+						return HttpResponse('Successfully added player to team!')
+					else:
+						return HttpResponse('Player already exists on team.')
     return HttpResponse('Player not found.')
 
 
