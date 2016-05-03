@@ -20,7 +20,7 @@ def rank(players, stats, length):
 					val = (float(player[stat['name']])-float(stats_n[stat['name']][0]))/(float(stats_n[stat['name']][1])-float(stats_n[stat['name']][0]))
 					val = val/ find_avg_of_stat(stat['name'], players)
 					stat_dict[stat['name']] = val
-			player_dict[player['id']] = stat_dict['ES Primary Points/GP'] * 0.5 + 0.25 * stat_dict['ES GF%Rel'] + 0.25 * stat_dict['ES GA']
+			player_dict[player['id']] = stat_dict['ES Primary Points/GP'] * 0.65 + 0.25 * stat_dict['ES GF%Rel'] + 0.15 * stat_dict['ES GA']
 			for stat in stats:
 				player_dict[player['id']] += (stat_dict[stat['name']] * stat['weight'])
 			for stat in stats:
