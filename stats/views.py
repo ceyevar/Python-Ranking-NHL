@@ -47,16 +47,16 @@ def index(request):
 
 def all(request):
     return HttpResponse(json.dumps(D))
-	
+    
 def rankings(request, sort):
-	return render(request, 'stats/rankings.html', {'rankings' : Rankings_full, 'players': helpers.get_all_players(D), 'sort': sort})
+    return render(request, 'stats/rankings.html', {'rankings' : Rankings_full, 'players': helpers.get_all_players(D), 'sort': sort})
 def league(request, league_name):
     for league in D["Leagues"]:
         if league["League Name"] == league_name:
             return render(request, 'stats/league.html', {'league' : league})
     raise Http404("League does not exist...")
 def glossary(request):
-	return render(request, 'stats/glossary.html')
+    return render(request, 'stats/glossary.html')
 def player(request, player_id):
     for league in D["Leagues"]:
         for team in league["Teams"]:
@@ -76,19 +76,19 @@ def player(request, player_id):
 
 
 def team(request, team_id):
-	ignore = ["SF%", "SA/GP", "SF/GP", "GF/GP","Sv%", "GA/GP", "SF", "PDO", "GF"]
-	for league in D["Leagues"]:
-		for team in league["Teams"]:
-			if team["id"] == int(team_id):
-				Teams = helpers.get_all_teams(D)
-				avg = helpers.avg_stats(Teams, ignore)
-				var = helpers.variance(Teams, avg)
-				dev = helpers.deviation(var)
-				team_dev = helpers.individual_deviation(team, dev, avg)
-				maxmin = helpers.maxmin_stats(Teams)
-				percent = helpers.percentages(team, maxmin['max'], maxmin['min'])
-				return render(request, 'stats/team.html', {'team' : team, 'percent': team_dev})
-	raise Http404("Team does not exist...")
+    ignore = ["SF%", "SA/GP", "SF/GP", "GF/GP","Sv%", "GA/GP", "SF", "PDO", "GF"]
+    for league in D["Leagues"]:
+        for team in league["Teams"]:
+            if team["id"] == int(team_id):
+                Teams = helpers.get_all_teams(D)
+                avg = helpers.avg_stats(Teams, ignore)
+                var = helpers.variance(Teams, avg)
+                dev = helpers.deviation(var)
+                team_dev = helpers.individual_deviation(team, dev, avg)
+                maxmin = helpers.maxmin_stats(Teams)
+                percent = helpers.percentages(team, maxmin['max'], maxmin['min'])
+                return render(request, 'stats/team.html', {'team' : team, 'percent': team_dev})
+    raise Http404("Team does not exist...")
 
 
 def compare_players(request, player1_id, player2_id):
@@ -169,12 +169,12 @@ def add_player(request, playerid):
     for league in D["Leagues"]:
         for team in league["Teams"]:
             for player in team["Players"]:
-				if player['id'] == int(playerid):
-					if player not in T['Players']:
-						T['Players'].append(player)
-						return HttpResponse('Successfully added player to team!')
-					else:
-						return HttpResponse('Player already exists on team.')
+                if player['id'] == int(playerid):
+                    if player not in T['Players']:
+                        T['Players'].append(player)
+                        return HttpResponse('Successfully added player to team!')
+                    else:
+                        return HttpResponse('Player already exists on team.')
     return HttpResponse('Player not found.')
 
 
